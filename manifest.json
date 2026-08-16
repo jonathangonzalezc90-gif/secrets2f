@@ -1,0 +1,16 @@
+{
+  "name": "SECRETS2F",
+  "short_name": "SECRETS2F",
+  "description": "Situaciones reales. Tú votas qué harías. Después se sabe qué pasó.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0b0714",
+  "theme_color": "#0b0714",
+  "lang": "es-CL",
+  "icons": [
+    { "src": "icono.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icono.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
