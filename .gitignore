@@ -1,0 +1,6 @@
+# Solo se publican los archivos web. Todo lo demas se queda en el computador.
+*
+!.gitignore
+!index.html
+!privacidad.html
+!terminos.html
