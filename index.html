@@ -368,6 +368,30 @@ return m;
 }
 return {
 hayCuenta: function(){ return !!(ses && ses.access_token); },
+/*Google devuelve la sesion pegada al final de la direccion, despues del #.
+La guardamos, limpiamos la direccion y pedimos los datos del usuario.*/
+volviendoDeProveedor: function(){
+var t = (location.hash || '').replace(/^#/, '');
+if (t.indexOf('access_token=') < 0 && t.indexOf('error') < 0) return null;
+var d = {}; t.split('&').forEach(function(par){
+var x = par.split('='); if (x[0]) d[decodeURIComponent(x[0])] = decodeURIComponent(x[1] || '');
+});
+try { history.replaceState(null, '', location.pathname + location.search); } catch(e){ location.hash = ''; }
+if (d.error || d.error_description) return Promise.reject(new Error(d.error_description || d.error));
+if (!d.access_token) return null;
+guardarSes({access_token: d.access_token, refresh_token: d.refresh_token,
+expires_at: parseInt(d.expires_at || '0', 10) || (Math.floor(Date.now()/1000) + 3600)});
+return pedir('/auth/v1/user').then(function(u){
+guardarSes({access_token: ses.access_token, refresh_token: ses.refresh_token,
+expires_at: ses.expires_at, user: u});
+return u;
+});
+},
+irAProveedor: function(prov){
+var vuelta = location.origin + location.pathname;
+location.href = URL_SB + '/auth/v1/authorize?provider=' + prov +
+'&redirect_to=' + encodeURIComponent(vuelta);
+},
 uid: function(){ return (ses && ses.user && ses.user.id) || null; },
 correo: function(){ return (ses && ses.user && ses.user.email) || ''; },
 registrar: function(correo, clave){
@@ -414,7 +438,20 @@ var e = document.getElementById('perf-usuario');
 if (e) e.textContent = MIUSUARIO + (SB.correo() ? ' · ' + SB.correo() : '');
 }
 var MIUSUARIO = '@invitado';
-var LLAVES = 14;var COSTO_DES = 8, COSTO_MSG = 40;var MEMBRESIA = 'free';function pintarLlaves(){var e = document.querySelectorAll('.llaves-n');for (var i=0;i<e.length;i++) e[i].textContent = LLAVES;}function sumarLlaves(n, motivo){LLAVES += n;pintarLlaves();aviso('Ganaste ' + n + (n===1?' llave ':' llaves ') + (motivo||'') + ' · llevas ' + LLAVES, '🔑');var c = document.querySelectorAll('.llc');for (var i=0;i<c.length;i++){(function(x){ x.classList.add('gana'); setTimeout(function(){ x.classList.remove('gana'); }, 700); })(c[i]);}}function gastarLlaves(n){if (MEMBRESIA === 'leg') return true;if (LLAVES < n) return false;LLAVES -= n; pintarLlaves(); return true;}function abrirConLlaves(){var x = HISTORIAS[HACT];if (!x || !x.dx){ aviso('No pudimos abrir este desenlace','⚠'); return; }if (MEMBRESIA === 'leg'){ aviso('Legendario: abierto sin llaves','👑'); verDesenlace(); return; }if (LLAVES < COSTO_DES){aviso('Te faltan ' + (COSTO_DES - LLAVES) + ' 🔑 · vota para juntarlas', '🔒');return;}if (!verDesenlace()) return;gastarLlaves(COSTO_DES);aviso('Abierto con ' + COSTO_DES + ' llaves', '🔑');}/*TUTORIAL DE PRIMERA VEZ*/
+var LLAVES = 14;var COSTO_DES = 8, COSTO_MSG = 40;var MEMBRESIA = 'free';function pintarLlaves(){var e = document.querySelectorAll('.llaves-n');for (var i=0;i<e.length;i++) e[i].textContent = LLAVES;}function sumarLlaves(n, motivo){LLAVES += n;pintarLlaves();moverLlavesServidor(n, motivo || 'por participar');aviso('Ganaste ' + n + (n===1?' llave ':' llaves ') + (motivo||'') + ' · llevas ' + LLAVES, '🔑');var c = document.querySelectorAll('.llc');for (var i=0;i<c.length;i++){(function(x){ x.classList.add('gana'); setTimeout(function(){ x.classList.remove('gana'); }, 700); })(c[i]);}}function gastarLlaves(n, motivo){if (MEMBRESIA === 'leg') return true;if (LLAVES < n) return false;LLAVES -= n; pintarLlaves();moverLlavesServidor(-n, motivo || 'por abrir contenido');return true;}
+/*El saldo de verdad lo lleva el servidor: el navegador solo puede pedir el
+movimiento. Se pinta al tiro para que se sienta rapido, y cuando el servidor
+responde se corrige con el saldo real. Si el servidor dice que no alcanza,
+gana el servidor.*/
+function moverLlavesServidor(n, motivo){
+if (!SB.hayCuenta() || !n) return;
+SB.rpc('mover_llaves', {cambio: n, razon: motivo}).then(function(saldo){
+if (typeof saldo === 'number' && saldo !== LLAVES){ LLAVES = saldo; pintarLlaves(); }
+}).catch(function(e){
+cargarMiPerfil();
+if (String(e.message).indexOf('suficientes') >= 0) aviso('No tienes llaves suficientes','\U0001F511');
+});
+}function abrirConLlaves(){var x = HISTORIAS[HACT];if (!x || !x.dx){ aviso('No pudimos abrir este desenlace','⚠'); return; }if (MEMBRESIA === 'leg'){ aviso('Legendario: abierto sin llaves','👑'); verDesenlace(); return; }if (LLAVES < COSTO_DES){aviso('Te faltan ' + (COSTO_DES - LLAVES) + ' 🔑 · vota para juntarlas', '🔒');return;}if (!verDesenlace()) return;gastarLlaves(COSTO_DES);aviso('Abierto con ' + COSTO_DES + ' llaves', '🔑');}/*TUTORIAL DE PRIMERA VEZ*/
 var TUTO = [{p:'s-discover', sel:'#mini-mapa', i:'🗺️', t:'Este es el mapa', s:'Cada pin es algo que contó alguien cerca. Tócalo y lo lees.'},{p:'s-discover', sel:'.dtabs', i:'👆', t:'Arriba hay más secciones', s:'Tócalas, o desliza el dedo a los lados.'},{p:'s-discover', sel:'#navbar', i:'👇', t:'Abajo están los botones', s:'Son cinco. Te digo para qué sirve cada uno.'},{p:'s-discover', sel:'#nav-desc', i:'🧭', t:'Descubrir', s:'El mapa y lo que pasa cerca tuyo.'},{p:'s-discover', sel:'#nav-band', i:'📬', t:'Bandeja', s:'Tus mensajes: los que mandaste y los que te llegaron.'},{p:'s-discover', sel:'#nav-crear', i:'➕', t:'Crear', s:'Para contar algo tuyo o pedir que resuelvan una pelea.'},{p:'s-discover', sel:'#nav-hoy', i:'🔥', t:'Hoy', s:'Lo más peleado del día.'},{p:'s-discover', sel:'#nav-perfil', i:'👤', t:'Perfil', s:'Tus llaves, tus votos y en qué aciertas más.'},{p:'s-discover', sel:'.llc', i:'🔑', t:'Y las llaves', s:'Ganas llaves al votar, al compartir y al contar lo tuyo. Sirven para desbloquear cosas.'}];var tutoI = 0;var VISTAS = {}, TUTOACT = false, TIPACT = null;var TIPS = {'s-received': {sel:'#ban-info', i:'📬', t:'Tu bandeja', s:'Acá llega todo: lo que mandaste, lo que te mandaron y lo que falta por abrirse.'},'s-today': {sel:'#hoy-peleado', i:'🔥', t:'Lo de hoy', s:'Las más peleadas: donde la votación va casi empatada.'},'s-category': {seq:[{sel:'#tic-expo', i:'🗣️', t:'Contar algo tuyo', s:'Algo que te pasó de verdad. Preguntas qué habrían hecho ellos.'},{sel:'#tic-disc', i:'⚖️', t:'Resolver una pelea', s:'Cuentas los dos lados y la gente decide quién tiene razón.'},{sel:'#tic-dil', i:'🤔', t:'Hacer un dilema', s:'Dos opciones y que elijan una. Nada te pasó, es solo para saber cómo piensan.'},{sel:'#tic-futuro', i:'⏳', t:'Mensaje al futuro', s:'Escribes hoy y se abre en la fecha que tú pongas.'}]},'s-profile': {seq:[{sel:'#foto-perfil', i:'🎭', t:'Eres anónimo', s:'Nadie ve tu nombre. Solo esta máscara y el apodo que te tocó.'},{sel:'.llc', i:'🔑', t:'Tus llaves', s:'Las juntas votando. Con ellas abres finales sin esperar.'},{sel:'#perf-stats', i:'📊', t:'Tus números', s:'Cuánto has votado y cuántas veces le acertaste al final.'}]},'s-vote': {sel:'#h-alts', i:'🗳️', t:'Primero eliges tú', s:'Marcas qué harías. Después ves qué votó la gente.'},'s-celebs': {sel:'#feed-faran', i:'⭐', t:'Farándula', s:'Lo del día. Votas y ves si la gente piensa igual que tú.'},'s-sports': {sel:'#feed-depor', i:'⚽', t:'Deportes', s:'Rumores y polémicas. Votas y ves qué dice el resto.'},'s-votes': {seq:[{sel:'#chip-enc', modo:'enc', i:'🗳️', t:'Encuestas', s:'Salud, educación, transporte, trabajo, vivienda y tu comuna.'},{sel:'#chip-qh', modo:'qh', i:'🤔', t:'¿Qué harías?', s:'Situaciones inventadas. No le pasaron a nadie, solo dices qué harías tú.'},{sel:'#chip-dil', modo:'dil', i:'⚖️', t:'Dilemas', s:'Dos opciones y eliges una. Sirve para saber cómo piensa la gente.'}]},'s-rapido': {sel:'#rap-tarjeta', i:'⚡', t:'Diez seguidas', s:'Votas rápido y al tiro ves qué pensó la gente.'},'s-disc': {sel:'#dc-alts', i:'⚖️', t:'¿Quién tiene la razón?', s:'Lees los dos lados y eliges uno. Los resultados salen cuando votas.'},'s-sent': {sel:'#env-0', i:'📤', t:'Tus enviados', s:'Los que van en camino y los que ya se abrieron. Tócalos para verlos.'},'s-privado': {sel:'#pv-tx', i:'💌', t:'Solo para ti', s:'Esto no lo ve nadie más.'},'s-expose': {sel:'#txt-expo', i:'🗣️', t:'Cuenta lo tuyo', s:'Escribe lo que te pasó, sin nombrar a nadie. Sale anónimo.'},'s-create-pareja': {sel:'#pj-motivo', i:'⚖️', t:'Los dos lados', s:'Escribe tu versión y la de la otra persona. La gente decide.'},'s-reveal': {sel:'#pred-res', i:'🔓', t:'Así terminó', s:'Te decimos si le acertaste y qué hizo de verdad. Baja para leer todo.'}};var TIPSEQ = null, TIPSEQI = 0;function tipPantalla(id){if (TUTOACT) return;if (VISTAS[id]) return;VISTAS[id] = 1;var t = TIPS[id];if (!t) return;if (t.seq){ TIPSEQ = t.seq; TIPSEQI = 0; tipPaso(); return; }TIPSEQ = null;TIPACT = t;var cap = document.getElementById('tuto');if (!cap) return;document.getElementById('tuto-ico').textContent = t.i;document.getElementById('tuto-t').textContent = t.t;document.getElementById('tuto-s').textContent = t.s;document.getElementById('tuto-paso').textContent = 'PRIMERA VEZ';document.getElementById('tuto-b').textContent = 'Entiendo';cap.classList.add('modo-tip');cap.style.display = 'flex';var bb = document.getElementById('tuto-bub');if(bb) bb.classList.remove('puesta');setTimeout(function(){ tutoUbicar(t); }, 380);setTimeout(function(){ tutoUbicar(t); }, 720);}function tipPaso(){var t = TIPSEQ[TIPSEQI];if (!t){ TIPSEQ = null; tipFin(); return; }TIPACT = t;if (t.modo){var chip = document.getElementById(t.sel.slice(1));if (chip) verDilemas(chip, t.modo);}var cap = document.getElementById('tuto');if (!cap) return;document.getElementById('tuto-ico').textContent = t.i;document.getElementById('tuto-t').textContent = t.t;document.getElementById('tuto-s').textContent = t.s;document.getElementById('tuto-paso').textContent = (TIPSEQI+1) + ' / ' + TIPSEQ.length;document.getElementById('tuto-b').textContent = (TIPSEQI === TIPSEQ.length-1) ? 'Entiendo' : 'Siguiente';cap.classList.add('modo-tip');cap.classList.add('seq');cap.style.display = 'flex';var bb = document.getElementById('tuto-bub');if(bb) bb.classList.remove('puesta');setTimeout(function(){ tutoUbicar(t); }, 380);setTimeout(function(){ tutoUbicar(t); }, 720);}function tipSig(){TIPSEQI++;if (TIPSEQI >= TIPSEQ.length){ TIPSEQ = null; tipFin(); return; }tipPaso();}function tipFin(){TIPACT = null;tutoLimpiarMarca();var cap = document.getElementById('tuto');if (cap){ cap.style.display = 'none'; cap.classList.remove('modo-tip'); cap.classList.remove('seq'); }}function tutoIni(){tutoI = 0;TUTOACT = true;var c = document.getElementById('tuto');c.classList.remove('modo-tip');c.style.display = 'flex';var b = document.getElementById('tuto-bub');if(b) b.classList.remove('puesta');tutoPintar();}function tutoPintar(){var t = TUTO[tutoI];if (t.p && PANT_ACT !== t.p) go(t.p);document.getElementById('tuto-ico').textContent = t.i;document.getElementById('tuto-t').textContent = t.t;document.getElementById('tuto-s').textContent = t.s;document.getElementById('tuto-paso').textContent = (tutoI+1) + ' / ' + TUTO.length;document.getElementById('tuto-b').textContent = (tutoI === TUTO.length-1) ? 'Listo' : 'Siguiente';setTimeout(function(){ tutoUbicar(t); }, 360);setTimeout(function(){ tutoUbicar(t); }, 700);}function tutoUbicar(t){var foco = document.getElementById('tuto-foco');var bub = document.getElementById('tuto-bub');var cap = document.getElementById('tuto');if (!foco || !bub) return;var pant = document.getElementById(PANT_ACT);var el = null;if (t.sel){if (pant) el = pant.querySelector(t.sel);if (!el) el = document.querySelector(t.sel);}var alto = window.innerHeight || 640;var ancho = window.innerWidth || 360;var abajoSeguro = 0;try{var cs = getComputedStyle(document.documentElement);var sa = parseInt(cs.getPropertyValue('--sab')) || 0;abajoSeguro = sa;}catch(e){}var nbEl = document.getElementById('navbar');var esDelNav = nbEl && el && (nbEl === el || (nbEl.contains ? nbEl.contains(el) : false));if (nbEl && !nbEl.classList.contains('oculto') && !esDelNav) abajoSeguro += 62;abajoSeguro += 10;bub.classList.remove('ap-ab','ap-ar');bub.style.top = ''; bub.style.bottom = '';var hb = bub.offsetHeight || 120;var MARGEN = 12;if (!el){foco.style.display = 'none';if (cap) cap.classList.add('sin-foco');tutoLimpiarMarca();bub.style.top = Math.max(MARGEN, Math.round((alto - abajoSeguro - hb) / 2)) + 'px';bub.classList.add('puesta');return;}var r = el.getBoundingClientRect();if (r.height && !t._scrolled){var util0 = alto - abajoSeguro;if (r.top < 0 || r.top > util0 - 40){t._scrolled = 1;try{ el.scrollIntoView({block:'center', behavior:'auto'}); }catch(e){ try{ el.scrollIntoView(); }catch(e2){} }var reintento = function(){ t._scrolled = 0; tutoUbicar(t); };if (window.requestAnimationFrame) requestAnimationFrame(function(){ setTimeout(reintento, 60); });else setTimeout(reintento, 90);return;}}t._scrolled = 0;if (!r.width && !r.height){foco.style.display = 'none';if (cap) cap.classList.add('sin-foco');tutoLimpiarMarca();bub.style.top = Math.max(MARGEN, Math.round((alto - abajoSeguro - hb) / 2)) + 'px';bub.classList.add('puesta');return;}if (cap) cap.classList.remove('sin-foco');document.querySelectorAll('.tuto-mira').forEach(function(x){x.classList.remove('tuto-mira');});el.classList.add('tuto-mira');var nb = document.getElementById('navbar');if (nb) nb.classList.toggle('tuto-arriba', nb === el || (nb.contains ? nb.contains(el) : false));var visTop = Math.max(0, r.top);var visBot = Math.min(alto - abajoSeguro, r.top + r.height);if (visBot <= visTop){ visTop = Math.max(0, r.top); visBot = visTop + 60; }var fTop = Math.max(4, visTop - 6);var fAlt = Math.max(40, (visBot - visTop) + 12);var LIM = alto - abajoSeguro - 4;if (fTop + fAlt > LIM) fAlt = Math.max(40, LIM - fTop);var NEC = hb + MARGEN * 3;var MINFOCO = 64;var UTIL = alto - abajoSeguro;var cabeAbajo = UTIL - fTop - NEC;var cabeArriba = fTop - NEC;if (UTIL - (fTop + fAlt) < NEC){if (cabeAbajo >= MINFOCO){fAlt = cabeAbajo;} else if (cabeArriba >= MINFOCO){fAlt = Math.min(fAlt, UTIL - fTop - 4);} else {fTop = 4;fAlt = Math.max(MINFOCO, UTIL - 4 - NEC);}}foco.style.display = 'block';foco.style.left = Math.max(4, r.left - 6) + 'px';foco.style.top = fTop + 'px';foco.style.width = Math.max(0, Math.min(r.width + 12, ancho - 8)) + 'px';foco.style.height = fAlt + 'px';var esp_abajo = UTIL - (fTop + fAlt) - MARGEN * 2;var esp_arriba = fTop - MARGEN * 2;var y;if (esp_abajo >= hb){y = fTop + fAlt + MARGEN;bub.classList.add('ap-ar');} else if (esp_arriba >= hb){y = fTop - hb - MARGEN;bub.classList.add('ap-ab');} else {y = (esp_abajo >= esp_arriba) ? (UTIL - hb - MARGEN) : MARGEN;}y = Math.max(MARGEN, Math.min(y, UTIL - hb - MARGEN));bub.style.top = Math.round(y) + 'px';bub.classList.add('puesta');}window.addEventListener('resize', function(){var c = document.getElementById('tuto');if (!c || c.style.display !== 'flex') return;var t = TIPACT || TUTO[tutoI];if (t) tutoUbicar(t);});function tutoLimpiarMarca(){document.querySelectorAll('.tuto-mira').forEach(function(x){x.classList.remove('tuto-mira');});var nb = document.getElementById('navbar');if (nb) nb.classList.remove('tuto-arriba');}function tutoAvanzar(){if (TIPSEQ) { tipSig(); return; }if (TIPACT) tipFin(); else tutoSig(); }function tutoCerrar(){if (TIPSEQ) { TIPSEQ = null; tipFin(); return; }if (TIPACT) tipFin(); else tutoFin(); }function tutoSig(){tutoI++;if (tutoI >= TUTO.length) tutoFin();else tutoPintar();}function tutoFin(){TUTOACT = false;tutoLimpiarMarca();document.getElementById('tuto').style.display = 'none';VISTAS['s-discover'] = 1;go('s-discover');aviso('Listo · toca un pin para empezar','🗺️');}function aviso(txt, ico){var t = document.getElementById('toast');t.innerHTML = (ico || '') + ' ' + txt;t.classList.add('show');clearTimeout(window._tt);window._tt = setTimeout(function(){ t.classList.remove('show'); }, 2600);}/*GESTOS*/
 var ORDEN = ['s-discover','s-celebs','s-sports','s-votes','s-received','s-today','s-profile'];(function(){var x0=null, y0=null, borde=false, act=-1;function bloqueado(el){if(!el || !el.closest) return false;if(el.closest('#mini-mapa,#panel-buscar,#modal-rec,#modal-pais,#modal-share,#modal-edit,#modal-foto,textarea,input')) return true;var n = el;while(n && n !== document.body){if(n.scrollWidth > n.clientWidth + 8){var ov = getComputedStyle(n).overflowX;if(ov === 'auto' || ov === 'scroll') return true;}n = n.parentElement;}return false;}document.addEventListener('touchstart', function(e){if(bloqueado(e.target)){ x0=null; act=-1; return; }var t = e.touches[0];var s = document.querySelector('.scn.acv');act = s ? ORDEN.indexOf(s.id) : -1;x0 = t.clientX; y0 = t.clientY;borde = t.clientX < 34;}, {passive:true});document.addEventListener('touchend', function(e){if(x0 === null) return;var t = e.changedTouches[0], dx = t.clientX-x0, dy = t.clientY-y0;x0 = null;if(Math.abs(dy) > 55 || Math.abs(dx) < 62) return;if(borde && dx > 0){ atras(); return; }if(act >= 0){var n = dx < 0 ? act+1 : act-1;if(n >= 0 && n < ORDEN.length) go(ORDEN[n]);return;}if(dx > 0) atras();}, {passive:true});})();/*PAGO Y REVELACIÓN*/
 var pantallaPrevia = 's-discover';function pagar(origen, idx){ pantallaPrevia = origen || 's-discover'; if (typeof idx === 'number') HACT = idx; go('s-checkout'); }var METODO = 'tarjeta';function metodoPago(m){METODO = m;var ls = document.querySelectorAll('#s-checkout .pago');for (var i=0;i<ls.length;i++) ls[i].classList.remove('avo');var a = event && event.currentTarget;if (a) a.classList.add('avo');var b = document.getElementById('btn-pagar');var esMsg = pantallaPrevia === 's-msg-link';if (b) b.textContent = m === 'llaves' ? ('\uD83D\uDD11 Abrir con ' + (esMsg ? COSTO_MSG : COSTO_DES) + ' llaves') : (esMsg ? '\u26A1 Abrir el mensaje' : '\u26A1 Ver el desenlace');}function confirmarPago(){if (pantallaPrevia === 's-msg-link'){if (METODO === 'llaves'){ abrirMsgConLlaves(); return; }if (MSGLINK) MSGLINK.abierto = true;aviso('Listo','\u2713');go('s-msg-link');verMsgAbierto();return;}if (METODO === 'llaves'){ abrirConLlaves(); return; }aviso('Listo','\u2713');verDesenlace();}function revelar(ya){go('s-reveal');var f1 = document.getElementById('rev-fase1'), f2 = document.getElementById('rev-fase2');var bar = document.getElementById('rev-bar'), lock = document.getElementById('rev-lock'), msg = document.getElementById('rev-msg');if (!f1) return;if (ya){f1.style.display='none'; f2.style.display='flex'; f2.classList.add('on'); return;}f1.style.display='flex'; f2.style.display='none'; f2.classList.remove('on');bar.style.width='0%'; lock.textContent='🔒'; msg.textContent='Descifrando...';setTimeout(function(){ bar.style.width='100%'; }, 60);setTimeout(function(){ msg.textContent='Casi listo...'; }, 900);setTimeout(function(){ lock.textContent='🔓'; msg.textContent='¡Listo!'; }, 1700);setTimeout(function(){ f1.style.display='none'; f2.style.display='flex'; f2.classList.add('on'); }, 2200);}/*INTERACCIONES*/
@@ -630,7 +667,108 @@ var MiniMapa = (function(){var listo = false, view, canvas, pins, svg;var tx = 0
 ? '<button onclick="event.stopPropagation();MiniMapa.cerrarPop();abrirPrivado('+o.priv+')" style="flex-shrink:0;background:'+c+';color:#fff;font-weight:800;font-size:12px;padding:8px 13px;border-radius:10px">Abrir</button>'
 : '<button onclick="event.stopPropagation();pagar(\'s-discover\')" style="flex-shrink:0;background:'+c+';color:#fff;font-weight:800;font-size:12px;padding:8px 13px;border-radius:10px">$'+o.precio+'</button>')
 + '<button onclick="event.stopPropagation();MiniMapa.cerrarPop()" style="color:var(--tx3);font-size:14px;flex-shrink:0;padding:4px">✕</button></div>';p.classList.add('on');pins.querySelectorAll('.mp').forEach(function(m){ m.classList.toggle('act', +m.dataset.i === i); });centrarEn(o.x, o.y + 60, Math.max(sc, 0.42));}function cerrarPop(){var p = document.getElementById('mini-pop');if (p) p.classList.remove('on');if (pins) pins.querySelectorAll('.mp').forEach(function(m){ m.classList.remove('act'); });}function arrastre(){var ax = 0, ay = 0, ix = 0, iy = 0, ab = false, mov = false;function ini(e){ab = true; mov = false;var p = e.touches ? e.touches[0] : e;ax = p.clientX; ay = p.clientY; ix = tx; iy = ty;view.classList.add('arr');}function mv(e){if (!ab) return;var p = e.touches ? e.touches[0] : e;var dx = p.clientX - ax, dy = p.clientY - ay;if (Math.abs(dx) > 4 || Math.abs(dy) > 4) mov = true;tx = ix + dx; ty = iy + dy; aplicar();if (e.cancelable) e.preventDefault();}function fin(){ ab = false; view.classList.remove('arr'); }view.addEventListener('mousedown', ini);view.addEventListener('touchstart', ini, {passive:true});window.addEventListener('mousemove', mv);view.addEventListener('touchmove', mv, {passive:false});window.addEventListener('mouseup', fin);view.addEventListener('touchend', fin);view.addEventListener('click', function(){ if (!mov) cerrarPop(); });}function iniciar(){if (listo) return;view = document.getElementById('mini-view');canvas = document.getElementById('mini-canvas');pins = document.getElementById('mini-pins');svg = document.getElementById('mini-svg');if (!view || !window.MapaSecretos) return;listo = true;pintar(); arrastre();centrarEn(1000, 1000, 0.30, false);}return {abrir: function(){ iniciar(); },zoom: function(f){if (!view) return;var r = view.getBoundingClientRect(), cx = r.width/2, cy = r.height/2;var wx = (cx - tx)/sc, wy = (cy - ty)/sc;sc = Math.max(.22, Math.min(1.5, sc*f));tx = cx - wx*sc; ty = cy - wy*sc;canvas.style.transition = 'transform .22s'; aplicar();setTimeout(function(){ canvas.style.transition = ''; }, 240);},centrar: function(){cerrarPop();if (view) centrarEn(1000, 1000, 0.30);var l = document.getElementById('mini-lbl');if (l) l.textContent = '9 secretos cerca';},irA: function(x, y, z, txt){cerrarPop();if (view) centrarEn(x, y, z || 0.6);var l = document.getElementById('mini-lbl');if (l && txt) l.textContent = txt;},cerrarPop: cerrarPop
-};})();/*CUENTA: crear, entrar, salir*/
+};})();/*CONTENIDO DESDE SUPABASE
+La app sigue usando los mismos arreglos de siempre (HISTORIAS, PAREJAS,
+ESCOGER, QUEHARIAS, FARAN, DEPOR) y las mismas funciones de pintado.
+Lo único que cambia es de dónde salen los datos: antes estaban escritos
+dentro del archivo, ahora se traen de la base. Si la base no responde,
+se queda con los que trae el archivo y la app igual funciona.*/
+var CONTENIDO_LISTO = false;
+function _op(fila){ return fila.opciones || []; }
+function _votos(id, n){
+var c = VOTOS_CONTEO[id];
+if (!c) return null;
+var r = []; for (var i=0;i<n;i++) r.push(c[i] || 0);
+return r;
+}
+function _pct(v){
+var t = 0, i; for (i=0;i<v.length;i++) t += v[i];
+if (!t) return v.map(function(){ return 0; });
+return v.map(function(x){ return Math.round(x * 100 / t); });
+}
+var VOTOS_CONTEO = {};
+function cargarContenido(){
+if (!SB.hayCuenta()) return Promise.resolve(false);
+return SB.leer('historias', 'select=*&publicado=eq.true&order=creado_en.asc&limit=400')
+.then(function(filas){
+return SB.rpc('conteo_votos', {}).then(function(cuenta){
+VOTOS_CONTEO = {};
+(cuenta || []).forEach(function(x){
+if (!VOTOS_CONTEO[x.historia_id]) VOTOS_CONTEO[x.historia_id] = {};
+VOTOS_CONTEO[x.historia_id][x.opcion_index] = x.votos;
+});
+return filas;
+});
+})
+.then(function(filas){
+var expo = [], disc = [], dil = [], qh = [], far = [], dep = [];
+filas.forEach(function(f){
+var o = _op(f), vv = _votos(f.id, o.length || 2);
+if (f.tipo === 'expo'){
+expo.push({id:f.id, m:f.mascara_emoji, a:f.mascara_nombre, z:f.zona_texto, l:f.zona_texto,
+d:180, c:f.categoria, t:f.texto, p:f.pregunta, o:o,
+v:_pct(vv || o.map(function(){ return 0; })), n:(vv?vv.reduce(function(a,b){return a+b;},0):0),
+dias:f.dias_limite||0, precio:'990', rev:!!f.revelado, dx:f.desenlace||''});
+} else if (f.tipo === 'discusion'){
+var p = _pct(vv || [0,0]);
+disc.push({id:f.id, tipo:f.zona_texto || '💔 Pareja', m:f.pregunta, a:f.texto, b:f.texto_b,
+va:p[0], vb:p[1]});
+} else if (f.tipo === 'dilema'){
+var pd = _pct(vv || [0,0]);
+var pa = (o[0]||'').split(' '), pb = (o[1]||'').split(' ');
+dil.push({id:f.id, c:f.categoria, ea:pa.shift(), a:pa.join(' '),
+eb:pb.shift(), b:pb.join(' '), r:pd[0],
+n:(vv?vv.reduce(function(a,b){return a+b;},0):0)});
+} else if (f.tipo === 'quehacer'){
+qh.push({id:f.id, e:f.mascara_emoji, z:f.zona_texto, l:f.zona_texto, d:1400, c:f.categoria,
+t:f.texto, o:o, v:_pct(vv || o.map(function(){ return 0; })),
+n:(vv?vv.reduce(function(a,b){return a+b;},0):0)});
+} else if (f.tipo === 'farandula' || f.tipo === 'deportes'){
+var pe = _pct(vv || [0,0]);
+var it = {id:f.id, k:f.categoria, e:f.mascara_emoji, t:f.texto, f:f.fuente, url:f.fuente_url,
+hs:3, v:(vv?vv.reduce(function(a,b){return a+b;},0):0), p:f.pregunta, o:o, r:pe,
+dest:!!f.destacada, com:0};
+if (f.tipo === 'deportes'){ it.eq = f.mascara_nombre; it.est = 'caliente'; it.n = it.v; dep.push(it); }
+else far.push(it);
+}
+});
+function llenar(arr, nuevos){
+if (!nuevos.length) return;
+arr.length = 0; for (var i=0;i<nuevos.length;i++) arr.push(nuevos[i]);
+}
+llenar(HISTORIAS, expo); llenar(PAREJAS, disc); llenar(ESCOGER, dil);
+llenar(QUEHARIAS, qh); llenar(FARAN, far); llenar(DEPOR, dep);
+CONTENIDO_LISTO = true;
+repintarTodo();
+return true;
+})
+.catch(function(e){ console.log('contenido:', e.message); return false; });
+}
+/*Vuelve a dibujar lo que este a la vista con los datos nuevos*/
+function repintarTodo(){
+[['pintarFeed'],['pintarDilemas'],['pintarQH'],['pintarFaran'],['pintarDepor'],
+['pintarVotas'],['pintarPeleado'],['pintarTendencias'],['pintarLugares']].forEach(function(n){
+try { if (typeof window[n[0]] === 'function') window[n[0]](); } catch(e){}
+});
+}
+/*VOTAR CONTRA LA BASE
+El voto se guarda y la llave se suma en el servidor. Si el voto no se puede
+guardar (ya votaste, o se cayo la conexion), no se regala la llave.*/
+function guardarVoto(id, indice){
+if (!id || !SB.hayCuenta()) return Promise.resolve(false);
+return SB.insertar('votos', {historia_id: id, votante_id: SB.uid(), opcion_index: indice}, false)
+.then(function(){
+if (!VOTOS_CONTEO[id]) VOTOS_CONTEO[id] = {};
+VOTOS_CONTEO[id][indice] = (VOTOS_CONTEO[id][indice] || 0) + 1;
+return SB.rpc('mover_llaves', {cambio: 1, razon: 'por votar'});
+})
+.then(function(saldo){ LLAVES = saldo; pintarLlaves(); return true; })
+.catch(function(e){
+if (String(e.message).indexOf('duplicate') < 0) console.log('voto:', e.message);
+return false;
+});
+}
+/*CUENTA: crear, entrar, salir*/
 function ocupado(id, texto){
 var b = document.getElementById(id);
 if (!b) return function(){};
@@ -656,6 +794,7 @@ return SB.actualizar('perfiles', 'id=eq.' + SB.uid(), {username: u});
 }).then(function(){
 return cargarMiPerfil();
 }).then(function(){
+cargarContenido();
 listo(); aviso('¡Bienvenid@ a SECRETS2F!','\U0001F389');
 go('s-discover'); setTimeout(tutoIni, 600);
 }).catch(function(e){
@@ -671,15 +810,21 @@ var listo = ocupado('log-btn', 'Entrando...');
 SB.entrar(c, k).then(function(){
 return cargarMiPerfil();
 }).then(function(){
+cargarContenido();
 listo(); aviso('Hola de nuevo','\U0001F44B'); go('s-discover');
 }).catch(function(e){
 listo(); aviso(e.message, '⚠️');
 });
 }
-/*Google y Apple todavia no estan configurados como proveedores en Supabase.
-Cuando lo esten, esto pasa a redirigir a /auth/v1/authorize?provider=...*/
+/*Google ya esta configurado. Apple necesita la cuenta de desarrollador
+de Apple (99 dolares al ano), asi que sigue apagado a proposito.*/
 function entrarCon(proveedor){
-aviso('Entrar con ' + (proveedor === 'apple' ? 'Apple' : 'Google') + ' todavía no está disponible · usa tu correo', '⚠️');
+if (proveedor !== 'google'){
+aviso('Entrar con Apple todavía no está disponible · usa Google o tu correo', '⚠️');
+return;
+}
+aviso('Conectando con Google...','⏳');
+SB.irAProveedor('google');
 }
 function cerrarSesion(){
 SB.salir().then(function(){
@@ -690,9 +835,21 @@ go('s-welcome');
 }
 /*Al abrir la app: si ya hay sesion guardada, entra directo*/
 function arrancarCuenta(){
+var vuelta = null;
+try { vuelta = SB.volviendoDeProveedor(); } catch(e){ vuelta = null; }
+if (vuelta && vuelta.then){
+vuelta.then(function(){ return cargarMiPerfil(); }).then(function(p){
+cargarContenido();
+aviso('¡Bienvenid@ a SECRETS2F!','\U0001F389');
+go('s-discover');
+if (p && p.username.indexOf('user_') === 0) setTimeout(tutoIni, 600);
+}).catch(function(e){ aviso(e.message || 'No pudimos entrar con Google', '⚠️'); });
+return;
+}
 if (!SB.hayCuenta()) return;
 cargarMiPerfil().then(function(p){
 if (p) go('s-discover');
+return cargarContenido();
 }).catch(function(){});
 }
 /*EVENTOS GLOBALES*/
