@@ -112,7 +112,7 @@ Continuar con Apple
 <div id="panel-buscar"><div style="padding:13px 14px 14px"><div class="zo ze"><span class="zm y9" style="left:13px;transform:translateY(-50%);color:var(--tx3);display:flex"><svg class="ic y112"><use href="#i-search"/></svg></span><input id="inp-buscar" class="inf" type="text" autocomplete="off"
 placeholder="Busca tu comuna: Maipú, Ñuñoa, Puente Alto..." style="padding-left:38px;font-size:16px"
 oninput="buscarLugar(this.value)"/></div>
-<div id="cats-lugar"><button class="zchip on" onclick="catLugar(this,'all')"><span>📍</span>Cerca</button><button class="zchip" onclick="catLugar(this,'universidad')"><span>🎓</span>Universidades</button><button class="zchip" onclick="catLugar(this,'trabajo')"><span>🏢</span>Trabajo</button><button class="zchip" onclick="catLugar(this,'carrete')"><span>🍻</span>Carrete</button><button class="zchip" onclick="catLugar(this,'salud')"><span>🏥</span>Salud</button><button class="zchip" onclick="catLugar(this,'mall')"><span>🛍️</span>Malls</button><button class="zchip" onclick="catLugar(this,'barrio')"><span>🏘️</span>Barrios</button><button class="zchip" onclick="catLugar(this,'deporte')"><span>🏟️</span>Deporte</button></div>
+<div id="cats-lugar"><button class="zchip on" onclick="catLugar(this,'all')"><span>📍</span>Cerca</button><button class="zchip" onclick="verComunas(this)"><span>🗺️</span>Comunas</button><button class="zchip" onclick="catLugar(this,'universidad')"><span>🎓</span>Universidades</button><button class="zchip" onclick="catLugar(this,'trabajo')"><span>🏢</span>Trabajo</button><button class="zchip" onclick="catLugar(this,'carrete')"><span>🍻</span>Carrete</button><button class="zchip" onclick="catLugar(this,'salud')"><span>🏥</span>Salud</button><button class="zchip" onclick="catLugar(this,'mall')"><span>🛍️</span>Malls</button><button class="zchip" onclick="catLugar(this,'barrio')"><span>🏘️</span>Barrios</button><button class="zchip" onclick="catLugar(this,'deporte')"><span>🏟️</span>Deporte</button></div>
 <div id="res-lugar"></div></div></div>
 <div id="tapa-buscar" onclick="cerrarBuscar()"></div><div class="am a5 z3" id="lista-local"><div class="ab aa aw a3" style="padding-top:12px;padding-bottom:8px"><p class="c1 ac ae z0" id="zona-sub">Historias cerca tuyo</p><span class="c0 ac" style="font-weight:700">Más nuevos primero</span></div>
 <div class="a3" style="padding-bottom:10px"><div class="cfg yc zb z4" onclick="abrirExponer()" style="border-color:rgba(127,19,236,.4);background:rgba(127,19,236,.1);margin:0"><span class="y104">➕</span><div class="za"><p class="ts1 z0">Comparte tu propia historia</p><p class="ah ac z0">Sin nombres. La gente vota y tú cuentas el final.</p></div><svg class="ic c0"><use href="#i-next"/></svg></div></div><div class="a3 ab aj af" id="feed-local"></div></div></div>
@@ -726,6 +726,25 @@ if (b && b.parentElement) b.parentElement.querySelectorAll('.plant').forEach(fun
 if (b) b.classList.add('avo');
 aviso('Mostrando ' + n, '📍');
 }
+/*Las 54 comunas, agrupadas por ciudad, para elegir sin escribir*/
+function verComunas(b){
+document.querySelectorAll('#cats-lugar .zchip').forEach(function(x){ x.classList.remove('on'); });
+if (b) b.classList.add('on');
+var i = document.getElementById('inp-buscar'); if (i) i.value = '';
+var caja = document.getElementById('res-lugar');
+if (!caja || typeof MapaSecretos === 'undefined') return;
+var s = '';
+MapaSecretos.ciudades().forEach(function(ciudad){
+s += '<p class="cfh" style="margin:12px 0 7px">' + ciudad + '</p>';
+s += MapaSecretos.comunasDe(ciudad).map(function(c){
+return '<div class="lug" onclick="irAMiComuna(\'' + c[0].replace(/'/g,'') + '\')">'
++ '<div class="lug-ico" style="background:rgba(127,19,236,.25)">📍</div>'
++ '<div class="lug-tx"><b>' + esc(c[0]) + '</b><small>' + ciudad + '</small></div>'
++ '<span class="lug-n">Ir</span></div>';
+}).join('');
+});
+caja.innerHTML = s;
+}
 /*Lleva el mapa a la comuna y cierra el buscador*/
 function irAMiComuna(nombre){
 if (typeof MiniMapa === 'undefined' || !MiniMapa.irAComuna) return;
@@ -751,20 +770,27 @@ La atribucion a OpenStreetMap es obligatoria por la licencia de los datos.*/
 var CIUDAD_ACT = 'Santiago';
 var COMUNAS = CIUDADES[CIUDAD_ACT];
 
+var AZULES = ['#16233f','#1a2a49','#142038','#1d2f52','#182642','#1b2c4c','#152139'];
 function planoSVG(){
 COMUNAS = CIUDADES[CIUDAD_ACT] || CIUDADES.Santiago;
-var s = '<rect width="2000" height="2000" fill="#120c22"/><g id="capa-comunas">';
+var s = '<defs>'
++ '<filter id="sombraCom" x="-20%" y="-20%" width="140%" height="140%">'
++ '<feDropShadow dx="0" dy="3" stdDeviation="5" flood-color="#000" flood-opacity=".5"/></filter>'
++ '</defs>';
+s += '<rect width="2000" height="2000" fill="#0a1020"/>';
+s += '<g id="capa-comunas" filter="url(#sombraCom)">';
 for (var i = 0; i < COMUNAS.length; i++){
-s += '<path d="' + COMUNAS[i][1] + '" fill="rgba(127,19,236,.055)" '
-+ 'stroke="rgba(176,110,247,.32)" stroke-width="2.2" stroke-linejoin="round"/>';
+s += '<path d="' + COMUNAS[i][1] + '" fill="' + AZULES[i % AZULES.length] + '" '
++ 'stroke="#3d5a8a" stroke-width="3" stroke-linejoin="round"/>';
 }
 s += '</g><g id="capa-nombres">';
 for (var j = 0; j < COMUNAS.length; j++){
 s += '<text x="' + COMUNAS[j][2] + '" y="' + COMUNAS[j][3] + '" text-anchor="middle" '
-+ 'fill="rgba(255,255,255,.34)" font-size="17" font-weight="700" '
++ 'fill="rgba(226,238,255,.72)" font-size="19" font-weight="800" letter-spacing=".5" '
++ 'stroke="#0a1020" stroke-width="4" paint-order="stroke" '
 + 'font-family="-apple-system,BlinkMacSystemFont,sans-serif">' + COMUNAS[j][0] + '</text>';
 }
-s += '</g><text x="1985" y="1988" text-anchor="end" fill="rgba(255,255,255,.28)" font-size="15" '
+s += '</g><text x="1985" y="1988" text-anchor="end" fill="rgba(226,238,255,.35)" font-size="15" '
 + 'font-family="-apple-system,BlinkMacSystemFont,sans-serif">© OpenStreetMap</text>';
 return s;
 }
@@ -791,11 +817,12 @@ return null;
 
 return {plano: planoSVG,buscarComuna: buscarComuna,comunas: function(){ return COMUNAS; },
 ciudades: function(){ return Object.keys(CIUDADES); },
+comunasDe: function(c){ return CIUDADES[c] || []; },
 ciudadActual: function(){ return CIUDAD_ACT; },
 cambiarCiudad: function(c){ if (CIUDADES[c]) { CIUDAD_ACT = c; COMUNAS = CIUDADES[c]; return true; } return false; },datos: function(){ return {Z:ZONAS, S:SECRETOS, C:C, COLOR:COLOR, EMOJI:EMOJI, NOMBRE:NOMBRE}; }};})();/*MAPA INTERACTIVO EN LOCAL*/
 var MiniMapa = (function(){var listo = false, view, canvas, pins, svg;var tx = 0, ty = 0, sc = 0.30, D = null;function aplicar(){ canvas.style.transform = 'translate('+tx+'px,'+ty+'px) scale('+sc+')'; }function centrarEn(x, y, z, anim){if (z) sc = Math.max(.22, Math.min(1.5, z));var r = view.getBoundingClientRect();tx = r.width/2 - x*sc;ty = r.height/2 - y*sc;if (anim !== false) {canvas.style.transition = 'transform .5s cubic-bezier(.32,.72,0,1)';setTimeout(function(){ canvas.style.transition = ''; }, 520);}aplicar();}function pintar(){D = MapaSecretos.datos();svg.innerHTML = MapaSecretos.plano();var s = '';D.Z.forEach(function(z){s += '<div class="mzo" style="left:'+z.x+'px;top:'+z.y+'px;width:'+(z.r*2)+'px;height:'+(z.r*2)+'px;'
-+ 'background:radial-gradient(circle,'+z.color+'26 0%,'+z.color+'0d 65%,transparent 72%);border:3px dashed '+z.color+'55">'
-+ '<span class="mzone-lbl">'+z.nombre+' · '+z.n+'</span></div>';});s += '<div id="mini-yo-pt" style="left:'+D.C.x+'px;top:'+D.C.y+'px;width:44px;height:44px;border-width:8px"></div>';D.S.forEach(function(o, i){var c = D.COLOR[o.t];s += '<span class="mp'+(o.t==='privado'?' mp-priv':'')+'" data-i="'+i+'" data-l="'+o.l+'" style="left:'+o.x+'px;top:'+o.y+'px;'
++ 'background:radial-gradient(circle,'+z.color+'1f 0%,'+z.color+'0a 60%,transparent 70%);border:2px dashed '+z.color+'44">'
++ '<span class="mzone-lbl">'+z.nombre+'</span></div>';});s += '<div id="mini-yo-pt" style="left:'+D.C.x+'px;top:'+D.C.y+'px;width:44px;height:44px;border-width:8px"></div>';D.S.forEach(function(o, i){var c = D.COLOR[o.t];s += '<span class="mp'+(o.t==='privado'?' mp-priv':'')+'" data-i="'+i+'" data-l="'+o.l+'" style="left:'+o.x+'px;top:'+o.y+'px;'
 + 'background:'+c+';box-shadow:0 0 34px '+c+'cc">'+D.EMOJI[o.t]+'</span>';});pins.innerHTML = s;pins.querySelectorAll('.mp').forEach(function(el){el.addEventListener('click', function(ev){ ev.stopPropagation(); abrirPop(+this.dataset.i); });});}function abrirPop(i){var o = D.S[i], c = D.COLOR[o.t];var p = document.getElementById('mini-pop');p.innerHTML = '<div style="display:flex;align-items:center;gap:9px">'
 + '<div style="width:32px;height:32px;border-radius:10px;background:'+c+'33;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0">'+D.EMOJI[o.t]+'</div>'
 + '<div class="f1m"><p style="color:#fff;font-weight:800;font-size:13px;margin:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+o.titulo+'</p>'
@@ -808,7 +835,81 @@ var MiniMapa = (function(){var listo = false, view, canvas, pins, svg;var tx = 0
 : o.t==='privado'
 ? '<button onclick="event.stopPropagation();MiniMapa.cerrarPop();abrirPrivado('+o.priv+')" style="flex-shrink:0;background:'+c+';color:#fff;font-weight:800;font-size:12px;padding:8px 13px;border-radius:10px">Abrir</button>'
 : '<button onclick="event.stopPropagation();MiniMapa.cerrarPop();verHistoriaDelMapa(\''+(o.hid||'')+'\')" style="flex-shrink:0;background:'+c+';color:#fff;font-weight:800;font-size:12px;padding:8px 15px;border-radius:10px">Ver</button>')
-+ '<button onclick="event.stopPropagation();MiniMapa.cerrarPop()" style="color:var(--tx3);font-size:14px;flex-shrink:0;padding:4px">✕</button></div>';p.classList.add('on');pins.querySelectorAll('.mp').forEach(function(m){ m.classList.toggle('act', +m.dataset.i === i); });centrarEn(o.x, o.y + 60, Math.max(sc, 0.42));}function cerrarPop(){var p = document.getElementById('mini-pop');if (p) p.classList.remove('on');if (pins) pins.querySelectorAll('.mp').forEach(function(m){ m.classList.remove('act'); });}function arrastre(){var ax = 0, ay = 0, ix = 0, iy = 0, ab = false, mov = false;function ini(e){ab = true; mov = false;var p = e.touches ? e.touches[0] : e;ax = p.clientX; ay = p.clientY; ix = tx; iy = ty;view.classList.add('arr');}function mv(e){if (!ab) return;var p = e.touches ? e.touches[0] : e;var dx = p.clientX - ax, dy = p.clientY - ay;if (Math.abs(dx) > 4 || Math.abs(dy) > 4) mov = true;tx = ix + dx; ty = iy + dy; aplicar();if (e.cancelable) e.preventDefault();}function fin(){ ab = false; view.classList.remove('arr'); }view.addEventListener('mousedown', ini);view.addEventListener('touchstart', ini, {passive:true});window.addEventListener('mousemove', mv);view.addEventListener('touchmove', mv, {passive:false});window.addEventListener('mouseup', fin);view.addEventListener('touchend', fin);view.addEventListener('click', function(){ if (!mov) cerrarPop(); });}function iniciar(){if (listo) return;view = document.getElementById('mini-view');canvas = document.getElementById('mini-canvas');pins = document.getElementById('mini-pins');svg = document.getElementById('mini-svg');if (!view || !window.MapaSecretos) return;listo = true;pintar(); arrastre();centrarEn(1000, 1000, 0.30, false);}return {abrir: function(){ iniciar(); },zoom: function(f){if (!view) return;var r = view.getBoundingClientRect(), cx = r.width/2, cy = r.height/2;var wx = (cx - tx)/sc, wy = (cy - ty)/sc;sc = Math.max(.22, Math.min(1.5, sc*f));tx = cx - wx*sc; ty = cy - wy*sc;canvas.style.transition = 'transform .22s'; aplicar();setTimeout(function(){ canvas.style.transition = ''; }, 240);},centrar: function(){cerrarPop();if (view) centrarEn(1000, 1000, 0.30);var l = document.getElementById('mini-lbl');if (l) l.textContent = '9 secretos cerca';},irA: function(x, y, z, txt){cerrarPop();if (view) centrarEn(x, y, z || 0.6);var l = document.getElementById('mini-lbl');if (l && txt) l.textContent = txt;},cerrarPop: cerrarPop,
++ '<button onclick="event.stopPropagation();MiniMapa.cerrarPop()" style="color:var(--tx3);font-size:14px;flex-shrink:0;padding:4px">✕</button></div>';p.classList.add('on');pins.querySelectorAll('.mp').forEach(function(m){ m.classList.toggle('act', +m.dataset.i === i); });centrarEn(o.x, o.y + 60, Math.max(sc, 0.42));}function cerrarPop(){var p = document.getElementById('mini-pop');if (p) p.classList.remove('on');if (pins) pins.querySelectorAll('.mp').forEach(function(m){ m.classList.remove('act'); });}function arrastre(){
+var ax = 0, ay = 0, ix = 0, iy = 0, ab = false, mov = false;
+/*Zoom con dos dedos. Antes solo servian los botones + y -, que en un mapa
+se siente raro: uno pellizca sin pensarlo.*/
+var pellizco = false, dist0 = 0, sc0 = 1, cx0 = 0, cy0 = 0;
+function separacion(t){
+var dx = t[0].clientX - t[1].clientX, dy = t[0].clientY - t[1].clientY;
+return Math.hypot(dx, dy);
+}
+function centro(t){
+return {x: (t[0].clientX + t[1].clientX) / 2, y: (t[0].clientY + t[1].clientY) / 2};
+}
+function ini(e){
+if (e.touches && e.touches.length === 2){
+pellizco = true; ab = false;
+dist0 = separacion(e.touches); sc0 = sc;
+var c = centro(e.touches), r = view.getBoundingClientRect();
+cx0 = c.x - r.left; cy0 = c.y - r.top;
+return;
+}
+ab = true; mov = false;
+var p = e.touches ? e.touches[0] : e;
+ax = p.clientX; ay = p.clientY; ix = tx; iy = ty;
+view.classList.add('arr');
+}
+function mv(e){
+if (pellizco && e.touches && e.touches.length === 2){
+var nueva = separacion(e.touches);
+if (dist0 > 0){
+/*Se acerca hacia donde estan los dedos, no hacia el centro de la pantalla*/
+var wx = (cx0 - tx) / sc, wy = (cy0 - ty) / sc;
+sc = Math.max(.22, Math.min(3, sc0 * (nueva / dist0)));
+tx = cx0 - wx * sc; ty = cy0 - wy * sc;
+aplicar();
+}
+if (e.cancelable) e.preventDefault();
+return;
+}
+if (!ab) return;
+var p = e.touches ? e.touches[0] : e;
+var dx = p.clientX - ax, dy = p.clientY - ay;
+if (Math.abs(dx) > 4 || Math.abs(dy) > 4) mov = true;
+tx = ix + dx; ty = iy + dy; aplicar();
+if (e.cancelable) e.preventDefault();
+}
+function fin(e){
+if (pellizco && (!e.touches || e.touches.length < 2)){ pellizco = false; mov = true; }
+ab = false; view.classList.remove('arr');
+}
+view.addEventListener('mousedown', ini);
+view.addEventListener('touchstart', ini, {passive:true});
+window.addEventListener('mousemove', mv);
+view.addEventListener('touchmove', mv, {passive:false});
+window.addEventListener('mouseup', fin);
+view.addEventListener('touchend', fin);
+/*Doble toque para acercar, como en cualquier mapa*/
+var ultimoToque = 0;
+view.addEventListener('touchend', function(e){
+var ahora = Date.now();
+if (ahora - ultimoToque < 300 && !mov){
+var r = view.getBoundingClientRect();
+var p = (e.changedTouches && e.changedTouches[0]) || {clientX: r.width/2, clientY: r.height/2};
+var px = p.clientX - r.left, py = p.clientY - r.top;
+var wx = (px - tx) / sc, wy = (py - ty) / sc;
+sc = Math.min(3, sc * 1.8);
+tx = px - wx * sc; ty = py - wy * sc;
+canvas.style.transition = 'transform .25s';
+aplicar();
+setTimeout(function(){ canvas.style.transition = ''; }, 260);
+}
+ultimoToque = ahora;
+});
+view.addEventListener('click', function(){ if (!mov) cerrarPop(); });
+}
+function iniciar(){if (listo) return;view = document.getElementById('mini-view');canvas = document.getElementById('mini-canvas');pins = document.getElementById('mini-pins');svg = document.getElementById('mini-svg');if (!view || !window.MapaSecretos) return;listo = true;pintar(); arrastre();centrarEn(1000, 1000, 0.30, false);}return {abrir: function(){ iniciar(); },zoom: function(f){if (!view) return;var r = view.getBoundingClientRect(), cx = r.width/2, cy = r.height/2;var wx = (cx - tx)/sc, wy = (cy - ty)/sc;sc = Math.max(.22, Math.min(1.5, sc*f));tx = cx - wx*sc; ty = cy - wy*sc;canvas.style.transition = 'transform .22s'; aplicar();setTimeout(function(){ canvas.style.transition = ''; }, 240);},centrar: function(){cerrarPop();if (view) centrarEn(1000, 1000, 0.30);var l = document.getElementById('mini-lbl');if (l) l.textContent = '9 secretos cerca';},irA: function(x, y, z, txt){cerrarPop();if (view) centrarEn(x, y, z || 0.6);var l = document.getElementById('mini-lbl');if (l && txt) l.textContent = txt;},cerrarPop: cerrarPop,
 redibujar: function(){ listo = false; iniciar(); },
 /*Lleva el mapa hasta una comuna buscada por su nombre*/
 irAComuna: function(nombre){
