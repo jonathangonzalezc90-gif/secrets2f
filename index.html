@@ -48,6 +48,7 @@
 #modal-lugar.on{display:flex}
 #modal-lugar>div{width:100%;background:rgba(18,11,32,.99);border-radius:22px 22px 0 0;padding:18px 16px 28px;border-top:1px solid rgba(255,255,255,.12);max-height:82vh;overflow-y:auto}
 #modal-lugar .mapa-chico{height:270px}
+.pap-fin{color:#fca5a5;border-color:rgba(239,68,68,.3)}
 .sel-cie{display:flex;align-items:center;justify-content:center;gap:5px;margin-top:10px;padding:5px 9px;border-radius:9px;font-size:11px;font-weight:700;letter-spacing:.02em;color:#3edcf0;background:rgba(6,182,212,.1);border:1px solid rgba(6,182,212,.22)}
 .sel-cie.fin{color:var(--tx3);background:rgba(255,255,255,.04);border-color:rgba(255,255,255,.1)}
 .cerrada .alt,.cerrada .dil-op,.cerrada .voto,.cerrada .miv,.cerrada .op-enc{pointer-events:none}
@@ -3012,8 +3013,20 @@ return '<div class="card bh" style="margin-bottom:10px;padding:13px;opacity:.85"
 + '<div class="ab aa ak" style="margin-bottom:7px"><span class="bdg bag ac">' + (nom[x.tipo] || x.tipo) + '</span>'
 + (f ? '<span class="ag ac">eliminada ' + f.toLocaleDateString('es-CL', {day:'numeric', month:'short'}) + '</span>' : '') + '</div>'
 + '<p class="ad z0" style="font-size:13.5px;line-height:1.5;margin:0 0 11px">' + esc((x.texto || '').slice(0, 150)) + '</p>'
-+ '<button class="btg" style="padding:8px 13px;font-size:13px;width:100%" onclick="devolverPublicacion(\'' + x.id + '\', ' + (mia ? 'cargarPapelera' : 'cargarPapeleraEquipo') + ')">↩ Devolver a la app</button>'
++ '<div class="ab af" style="gap:7px"><button class="btg" style="padding:8px 13px;font-size:13px;flex:1" onclick="devolverPublicacion(\'' + x.id + '\', ' + (mia ? 'cargarPapelera' : 'cargarPapeleraEquipo') + ')">↩ Devolver</button>'
++ '<button class="btg pap-fin" style="padding:8px 13px;font-size:13px;flex:1" onclick="borrarParaSiempre(\'' + x.id + '\', ' + (mia ? 'cargarPapelera' : 'cargarPapeleraEquipo') + ')">🔥 Borrar para siempre</button></div>'
++ '<p class="ag ac z0" style="margin:8px 0 0">Si nadie la toca, se borra sola a los 30 días.</p>'
 + '</div>';
+}
+/*Borrar de verdad. Solo desde la papelera: son dos pasos y dos avisos, no uno.
+Se lleva los votos y los comentarios, y no hay vuelta atras.*/
+function borrarParaSiempre(id, luego){
+if (!confirm('¿Borrar esto para siempre?\n\nSe va con sus votos y comentarios. Esto no se puede deshacer.')) return;
+SB.borrar('historias', 'id=eq.' + id)
+.then(function(){
+aviso('Borrado para siempre','🔥');
+if (typeof luego === 'function') luego();
+}).catch(function(e){ aviso(e.message, '⚠️'); });
 }
 /*La del usuario: solo lo suyo*/
 function cargarPapelera(){
