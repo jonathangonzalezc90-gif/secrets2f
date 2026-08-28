@@ -779,7 +779,7 @@ Continuar con Google
 </button><button onclick="entrarCon('apple')" class="ab aa at ak b4 bx bg ae ad" style="background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.12)"><span class="y6" style="font-size:22px;display:inline-block"></span>
 Continuar con Apple
 </button><div class="ab aa ak"><div class="am cf" style="background:rgba(255,255,255,0.1)"></div><span class="av ac">o con correo</span><div class="am cf" style="background:rgba(255,255,255,0.1)"></div></div><div class="ab aj aa af"><label class="zb zo"><input type="file" accept="image/*" onchange="subirFoto(this,'foto-reg')"/ style="display:none"><div id="foto-reg" class="foto-sube"><svg class="ic" style="font-size:28px;color:var(--ac2)"><use href="#i-image"/></svg></div><span class="foto-mas"><svg class="ic"><use href="#i-plus"/></svg></span></label><p class="ag ac" id="foto-txt">Toca para subir tu foto (opcional)</p></div><div><label class="bk au bj ar bi">Nombre de usuario</label><div class="ap"><span class="ag an bz b0 c5 ae a7">@</span><input id="reg-usuario" class="inf b9" type="text" placeholder="tu_usuario"/><p style="color:var(--tx3);font-size:11px;margin:5px 0 0;line-height:1.4">Solo sirve para entrar. No aparece en lo que publiques, así que no uses tu nombre real ni el mismo de tus redes.</p></div></div><div><label class="bk au bj ar bi">Correo Electrónico</label><div class="ap"><span class="an bz b0 c5" style="font-size:17px;color:rgba(255,255,255,.35);display:flex"><svg class="ic"><use href="#i-inbox"/></svg></span><input id="reg-correo" class="inf b1" type="email" placeholder="tu.correo@ejemplo.com"/></div></div><div><label class="bk au bj ar bi">Contraseña</label><div class="ap"><span class="ag an bz b0 c5 e20"><svg class="ic"><use href="#i-lock"/></svg></span><input id="reg-clave" class="inf b1" type="password" placeholder="Mínimo 8 caracteres"/></div></div><div class="card bh ab aa ak"><input id="reg-edad" type="checkbox" class="cs ct b8" style="accent-color:#7f13ec"/><p class="a0 au">Confirmo que tengo <span class="ad ae">+18 años</span></p></div><p class="ac av al">Al registrarte, aceptas nuestros <span class="a0 underline ai" onclick="verLegal('terminos')">Términos</span> y <span class="a0 underline ai" onclick="verLegal('privacidad')">Política de Privacidad</span>.</p></div><div class="cb ch co" style="border-top:1px solid rgba(255,255,255,0.07);background:rgba(15,10,26,0.95)"><button id="reg-btn" class="btp" onclick="crearCuenta()">Crear mi cuenta</button><p class="al au as cc">¿Ya tienes cuenta? <a class="ad ae ai" onclick="go('s-login')">Inicia sesión</a></p></div></div>
-<!-- ============ SCREEN: PANEL EDITORIAL ============ --><div class="scn" id="s-editorial"><div class="tb3"><button onclick="go('s-profile')" class="icb"><svg class="ic"><use href="#i-back"/></svg></button><h2 class="ttl">Cargar contenido</h2><div class="w38"></div></div><div class="scr4"><div class="ab af a8" style="margin-bottom:12px"><button class="tab2 avo" id="ed-tab-borr" onclick="edVista(this,'borradores')">📝 Borradores</button><button class="tab2" id="ed-tab-pub" onclick="edVista(this,'publicadas')">✓ Publicadas</button><button class="tab2" id="ed-tab-desc" onclick="edVista(this,'descartadas')">🚫 Descartadas</button><button class="tab2" id="ed-tab-new" onclick="edVista(this,'nueva')">➕ Cargar</button></div><div id="ed-borradores"></div><div id="ed-publicadas" style="display:none"></div><div id="ed-descartadas" style="display:none"></div><h3 class="tb1 z1" id="ed-tit-nueva" style="margin-top:6px;display:none">Cargar algo nuevo</h3><div id="ed-form" style="display:none"><p class="cfh">Sección</p><div class="ab af a8" style="flex-wrap:wrap"><button class="plant avo" onclick="edTipo(this,'farandula')">⭐ Farándula</button><button class="plant" onclick="edTipo(this,'deportes')">⚽ Deportes</button><button class="plant" onclick="edTipo(this,'encuesta')">📊 Encuesta</button><button class="plant" onclick="edTipo(this,'quehacer')">🤔 ¿Qué harías si...?</button></div><p id="ed-ayuda" class="ah ac z0" style="margin:8px 0 0"></p><p class="cfh" id="ed-lbl-titular">Titular</p><textarea id="ed-titular" class="inf" rows="3" placeholder="Se quebró en vivo y el estudio quedó en silencio" style="padding:11px 13px;font-size:16px;resize:vertical"></textarea><p class="cfh">Emoji</p><input id="ed-emoji" class="inf" type="text" value="📸" maxlength="4" style="padding:11px 13px;font-size:16px"/><div id="ed-caja-fuente"><p class="cfh">Medio que lo publicó</p><input id="ed-fuente" class="inf" type="text" placeholder="La Cuarta" style="padding:11px 13px;font-size:16px"/><p class="ah ac z0" style="margin:6px 0 0">Obligatorio en farándula y deportes. Sin medio, no se publica.</p><p class="cfh">Enlace a la noticia</p><input id="ed-url" class="inf" type="url" placeholder="https://..." style="padding:11px 13px;font-size:16px"/></div><p class="cfh" id="ed-lbl-preg">Pregunta para la gente</p><input id="ed-pregunta" class="inf" type="text" placeholder="¿Real o actuado?" style="padding:11px 13px;font-size:16px"/><p class="cfh">Alternativa 1</p><input id="ed-op1" class="inf" type="text" placeholder="😢 Real" style="padding:11px 13px;font-size:16px"/><p class="cfh">Alternativa 2</p><input id="ed-op2" class="inf" type="text" placeholder="🎭 Actuado" style="padding:11px 13px;font-size:16px"/><p class="cfh">Alternativa 3 <span class="av">(opcional)</span></p><input id="ed-op3" class="inf" type="text" placeholder="Déjala vacía si no la necesitas" style="padding:11px 13px;font-size:16px"/><p class="cfh">Alternativa 4 <span class="av">(opcional)</span></p><input id="ed-op4" class="inf" type="text" placeholder="Déjala vacía si no la necesitas" style="padding:11px 13px;font-size:16px"/><div class="card bh ab aa ak" style="margin-top:14px"><input id="ed-destacada" type="checkbox" class="cs ct b8" style="accent-color:#7f13ec"/><p class="a0 au">Mostrarla grande, arriba de todo</p></div><div class="card bh ab aa ak"><input id="ed-publicar" type="checkbox" class="cs ct b8" checked style="accent-color:#7f13ec"/><p class="a0 au">Publicarla ahora <span class="ac">(si la dejas apagada queda de borrador y solo la ves tú)</span></p></div><div style="height:14px"></div><button id="ed-btn" class="btp" onclick="publicarEditorial()">Publicar</button></div><div style="height:24px"></div></div></div><!-- ============ SCREEN: INICIAR SESIÓN ============ --><div class="scn" id="s-login"><div class="tb3"><button onclick="go('s-register')" class="icb"><svg class="ic"><use href="#i-back"/></svg></button><h2 class="ttl">Inicia sesión</h2><div class="w38"></div></div><div class="am a5 cb ck ab aj ci"><p class="ac av al" style="margin-top:4px">Entra con el correo y la contraseña que usaste al crear tu cuenta.</p><div><label class="bk au bj ar bi">Correo Electrónico</label><div class="ap"><input id="log-correo" class="inf b1" type="email" placeholder="tu.correo@ejemplo.com"/></div></div><div><label class="bk au bj ar bi">Contraseña</label><div class="ap"><input id="log-clave" class="inf b1" type="password" placeholder="Tu contraseña"/></div></div></div><div class="cb ch co" style="border-top:1px solid rgba(255,255,255,0.07);background:rgba(15,10,26,0.95)"><button id="log-btn" class="btp" onclick="iniciarSesion()">Entrar</button><p class="al au as cc">¿No tienes cuenta? <a class="ad ae ai" onclick="go('s-register')">Créala aquí</a></p></div></div><!-- ============ SCREEN: HOY ============ --><div class="scn" id="s-today"><div class="tbg z31"><div class="f1m"><h2 class="ad ae z21">A lo que viniste</h2><p class="z22">Lo que la gente está decidiendo hoy</p></div><div class="llc" onclick="aviso('Vota para juntar llaves y abrir desenlaces','🔑')"><span>🔑</span><b class="llaves-n">24</b></div><button class="ab aa br bdg ai" style="background:rgba(249,115,22,.16);color:#fdba74;border:1px solid rgba(249,115,22,.32)" onclick="aviso('Llevas 12 días seguidos. ¡No la pierdas!','🔥')">🔥 <b>12</b></button></div>
+<!-- ============ SCREEN: PANEL EDITORIAL ============ --><div class="scn" id="s-editorial"><div class="tb3"><button onclick="go('s-profile')" class="icb"><svg class="ic"><use href="#i-back"/></svg></button><h2 class="ttl">Cargar contenido</h2><div class="w38"></div></div><div class="scr4"><div class="ab af a8" style="margin-bottom:12px"><button class="tab2 avo" id="ed-tab-borr" onclick="edVista(this,'borradores')">📝 Borradores</button><button class="tab2" id="ed-tab-pub" onclick="edVista(this,'publicadas')">✓ Publicadas</button><button class="tab2" id="ed-tab-desc" onclick="edVista(this,'descartadas')">🚫 Descartadas</button><button class="tab2" id="ed-tab-new" onclick="edVista(this,'nueva')">➕ Cargar</button></div><div id="ed-sub" style="display:none"><div class="ap" style="margin-bottom:9px"><span class="zm y9" style="left:11px;transform:translateY(-50%);font-size:13px;opacity:.5">🔍</span><input id="ed-buscar" class="inf" type="text" placeholder="Buscar en estas noticias..." oninput="filtrarPanel()" style="padding:9px 12px 9px 33px;font-size:15px"/></div><div class="ab af a8" id="ed-secciones" style="flex-wrap:wrap;margin-bottom:10px"></div></div><div id="ed-borradores"></div><div id="ed-publicadas" style="display:none"></div><div id="ed-descartadas" style="display:none"></div><h3 class="tb1 z1" id="ed-tit-nueva" style="margin-top:6px;display:none">Cargar algo nuevo</h3><div id="ed-form" style="display:none"><p class="cfh">Sección</p><div class="ab af a8" style="flex-wrap:wrap"><button class="plant avo" onclick="edTipo(this,'farandula')">⭐ Farándula</button><button class="plant" onclick="edTipo(this,'deportes')">⚽ Deportes</button><button class="plant" onclick="edTipo(this,'encuesta')">📊 Encuesta</button><button class="plant" onclick="edTipo(this,'quehacer')">🤔 ¿Qué harías si...?</button></div><p id="ed-ayuda" class="ah ac z0" style="margin:8px 0 0"></p><p class="cfh" id="ed-lbl-titular">Titular</p><textarea id="ed-titular" class="inf" rows="3" placeholder="Se quebró en vivo y el estudio quedó en silencio" style="padding:11px 13px;font-size:16px;resize:vertical"></textarea><p class="cfh">Emoji</p><input id="ed-emoji" class="inf" type="text" value="📸" maxlength="4" style="padding:11px 13px;font-size:16px"/><div id="ed-caja-fuente"><p class="cfh">Medio que lo publicó</p><input id="ed-fuente" class="inf" type="text" placeholder="La Cuarta" style="padding:11px 13px;font-size:16px"/><p class="ah ac z0" style="margin:6px 0 0">Obligatorio en farándula y deportes. Sin medio, no se publica.</p><p class="cfh">Enlace a la noticia</p><input id="ed-url" class="inf" type="url" placeholder="https://..." style="padding:11px 13px;font-size:16px"/></div><p class="cfh" id="ed-lbl-preg">Pregunta para la gente</p><input id="ed-pregunta" class="inf" type="text" placeholder="¿Real o actuado?" style="padding:11px 13px;font-size:16px"/><p class="cfh">Alternativa 1</p><input id="ed-op1" class="inf" type="text" placeholder="😢 Real" style="padding:11px 13px;font-size:16px"/><p class="cfh">Alternativa 2</p><input id="ed-op2" class="inf" type="text" placeholder="🎭 Actuado" style="padding:11px 13px;font-size:16px"/><p class="cfh">Alternativa 3 <span class="av">(opcional)</span></p><input id="ed-op3" class="inf" type="text" placeholder="Déjala vacía si no la necesitas" style="padding:11px 13px;font-size:16px"/><p class="cfh">Alternativa 4 <span class="av">(opcional)</span></p><input id="ed-op4" class="inf" type="text" placeholder="Déjala vacía si no la necesitas" style="padding:11px 13px;font-size:16px"/><div class="card bh ab aa ak" style="margin-top:14px"><input id="ed-destacada" type="checkbox" class="cs ct b8" style="accent-color:#7f13ec"/><p class="a0 au">Mostrarla grande, arriba de todo</p></div><div class="card bh ab aa ak"><input id="ed-publicar" type="checkbox" class="cs ct b8" checked style="accent-color:#7f13ec"/><p class="a0 au">Publicarla ahora <span class="ac">(si la dejas apagada queda de borrador y solo la ves tú)</span></p></div><div style="height:14px"></div><button id="ed-btn" class="btp" onclick="publicarEditorial()">Publicar</button></div><div style="height:24px"></div></div></div><!-- ============ SCREEN: INICIAR SESIÓN ============ --><div class="scn" id="s-login"><div class="tb3"><button onclick="go('s-register')" class="icb"><svg class="ic"><use href="#i-back"/></svg></button><h2 class="ttl">Inicia sesión</h2><div class="w38"></div></div><div class="am a5 cb ck ab aj ci"><p class="ac av al" style="margin-top:4px">Entra con el correo y la contraseña que usaste al crear tu cuenta.</p><div><label class="bk au bj ar bi">Correo Electrónico</label><div class="ap"><input id="log-correo" class="inf b1" type="email" placeholder="tu.correo@ejemplo.com"/></div></div><div><label class="bk au bj ar bi">Contraseña</label><div class="ap"><input id="log-clave" class="inf b1" type="password" placeholder="Tu contraseña"/></div></div></div><div class="cb ch co" style="border-top:1px solid rgba(255,255,255,0.07);background:rgba(15,10,26,0.95)"><button id="log-btn" class="btp" onclick="iniciarSesion()">Entrar</button><p class="al au as cc">¿No tienes cuenta? <a class="ad ae ai" onclick="go('s-register')">Créala aquí</a></p></div></div><!-- ============ SCREEN: HOY ============ --><div class="scn" id="s-today"><div class="tbg z31"><div class="f1m"><h2 class="ad ae z21">A lo que viniste</h2><p class="z22">Lo que la gente está decidiendo hoy</p></div><div class="llc" onclick="aviso('Vota para juntar llaves y abrir desenlaces','🔑')"><span>🔑</span><b class="llaves-n">24</b></div><button class="ab aa br bdg ai" style="background:rgba(249,115,22,.16);color:#fdba74;border:1px solid rgba(249,115,22,.32)" onclick="aviso('Llevas 12 días seguidos. ¡No la pierdas!','🔥')">🔥 <b>12</b></button></div>
 <div class="scr" style="padding-bottom:20px;padding-top:14px">
 <!-- MODO RÁPIDO --><div class="y7 ze zb zr" onclick="iniciarRapido()" style="background:linear-gradient(135deg,rgba(6,182,212,.26),rgba(127,19,236,.16));border:1px solid rgba(6,182,212,.32);border-radius:var(--rl)"><div class="ab aa ak"><div class="zd zj zf" style="width:44px;height:44px;border-radius:14px;background:rgba(6,182,212,.22);display:flex;font-size:21px">⚡</div><div class="f1m"><p class="ad ae z0" style="font-size:14.5px">Vota 10 en 2 minutos</p><p style="color:var(--tx3);font-size:11.5px;margin:3px 0 0">Historias rápidas · gana 12 🔑</p></div><svg class="ic" style="font-size:18px;color:var(--tx3)"><use href="#i-next"/></svg></div></div>
 <!-- LA COMUNIDAD DECIDIÓ --><h3 class="sec-h" style="--sc:#c08af8;margin-top:0"><span>🗣️</span>La comunidad decidió</h3><div class="zq ze zb zr" onclick="abrirHistoria(1)" style="background:linear-gradient(160deg,rgba(127,19,236,.24),rgba(255,255,255,.03));border:1px solid rgba(127,19,236,.35);border-radius:var(--rl)"><p style="color:#fff;font-size:15px;font-weight:700;line-height:1.4;margin:0 0 12px">"Descubrí que seguía hablando con su ex. ¿Qué harían?"</p><div class="ab aj af z6"><div class="res-f"><span class="rel">Termino</span><div class="reb"><div style="width:54%;background:linear-gradient(90deg,#8b1ff0,#b06ef7)"></div></div><b>54%</b></div><div class="res-f"><span class="rel">Otra oportunidad</span><div class="reb"><div style="width:19%;background:rgba(255,255,255,.2)"></div></div><b class="z7">19%</b></div><div class="res-f"><span class="rel">Hablo primero</span><div class="reb"><div style="width:21%;background:rgba(255,255,255,.2)"></div></div><b class="z7">21%</b></div></div><div class="fib" style="border-top:1px solid rgba(255,255,255,.1);padding-top:11px"><span style="color:var(--tx3);font-size:11.5px">8.412 votos</span><span style="color:#fdba74;font-size:11.5px;font-weight:800">🔒 Desenlace en 4 días</span></div></div>
@@ -2481,11 +2481,15 @@ var pu = document.getElementById('ed-publicadas');
 var de = document.getElementById('ed-descartadas');
 var ti = document.getElementById('ed-tit-nueva');
 var fo = document.getElementById('ed-form');
+var sub = document.getElementById('ed-sub');
+if (sub) sub.style.display = (v === 'borradores' || v === 'publicadas') ? '' : 'none';
 if (bo) bo.style.display = v === 'borradores' ? '' : 'none';
 if (pu) pu.style.display = v === 'publicadas' ? '' : 'none';
 if (de) de.style.display = v === 'descartadas' ? '' : 'none';
 if (ti) ti.style.display = v === 'nueva' ? '' : 'none';
 if (fo) fo.style.display = v === 'nueva' ? '' : 'none';
+EDSEC = 'all'; EDTXT = '';
+var bu = document.getElementById('ed-buscar'); if (bu) bu.value = '';
 if (v === 'borradores') cargarBorradores();
 if (v === 'publicadas') cargarPublicadas();
 if (v === 'descartadas') cargarDescartadas();
@@ -2540,10 +2544,7 @@ caja.innerHTML = '<div class="card bh al" style="padding:18px"><p class="ac au" 
 return;
 }
 BORRADORES = filas;
-caja.innerHTML = '<h3 class="tb1 z1" style="margin-top:2px">Publicadas <span class="bdg bag ac">' + filas.length + '</span></h3>'
-+ '<p class="ac av" style="margin:-4px 0 10px">Lo que ya está en la app. Puedes bajarlo o corregirlo.</p>'
-+ filas.map(function(x, i){ return borradorHTML(x, i, true); }).join('')
-+ '<div style="height:20px"></div>';
+repintarPanel();
 }).catch(function(e){ caja.innerHTML = '<p class="ac av">No pudimos traerlas: ' + esc(e.message) + '</p>'; });
 }
 /*Bajar algo ya publicado: vuelve a borrador, no se borra*/
@@ -2554,23 +2555,75 @@ cargarPublicadas();
 return cargarContenido();
 }).catch(function(e){ aviso(e.message, '⚠️'); });
 }
+/*El panel filtra por seccion y por palabra. Antes habia que bajar por una
+lista larga mezclando farandula con deportes para encontrar algo.*/
+var EDSEC = 'all', EDTXT = '';
+function pintarSecciones(){
+var c = document.getElementById('ed-secciones');
+if (!c) return;
+var nom = {farandula:'⭐ Farándula', deportes:'⚽ Deportes',
+encuesta:'📊 Encuestas', quehacer:'🤷 ¿Qué harías?'};
+var hay = {};
+(BORRADORES || []).forEach(function(x){ hay[x.tipo] = (hay[x.tipo] || 0) + 1; });
+var claves = Object.keys(nom).filter(function(k){ return hay[k]; });
+c.innerHTML = '<button class="plant' + (EDSEC === 'all' ? ' avo' : '') + '" onclick="edSeccion(this,\'all\')">Todas <b>' + (BORRADORES || []).length + '</b></button>'
++ claves.map(function(k){
+return '<button class="plant' + (EDSEC === k ? ' avo' : '') + '" onclick="edSeccion(this,\'' + k + '\')">' + nom[k] + ' <b>' + hay[k] + '</b></button>';
+}).join('');
+}
+function edSeccion(b, k){
+EDSEC = k;
+var c = document.getElementById('ed-secciones');
+if (c) c.querySelectorAll('.plant').forEach(function(x){ x.classList.remove('avo'); });
+if (b) b.classList.add('avo');
+repintarPanel();
+}
+function filtrarPanel(){
+EDTXT = ((document.getElementById('ed-buscar') || {}).value || '').trim();
+repintarPanel();
+}
+function panelFiltrado(){
+var t = sinTildes(EDTXT);
+return (BORRADORES || []).filter(function(x){
+if (EDSEC !== 'all' && x.tipo !== EDSEC) return false;
+if (!t) return true;
+return sinTildes((x.texto || '') + ' ' + (x.pregunta || '') + ' ' + (x.fuente || '')).indexOf(t) > -1;
+});
+}
+function repintarPanel(){
+var caja = document.getElementById(EDVISTA === 'publicadas' ? 'ed-publicadas' : 'ed-borradores');
+if (!caja) return;
+var f = panelFiltrado();
+var yaSalio = EDVISTA === 'publicadas';
+var titulo = yaSalio ? 'Publicadas' : 'Borradores';
+if (!f.length){
+caja.innerHTML = '<h3 class="tb1 z1" style="margin-top:2px">' + titulo + '</h3>'
++ '<p class="ac av al" style="padding:22px 0">Nada acá' + (EDTXT ? ' con «' + esc(EDTXT) + '»' : '') + '.</p>';
+pintarSecciones();
+return;
+}
+caja.innerHTML = '<h3 class="tb1 z1" style="margin-top:2px">' + titulo + ' <span class="bdg bag ac">' + f.length + '</span></h3>'
++ (yaSalio
+? '<p class="ac av" style="margin:-4px 0 10px">Lo que ya está en la app. Puedes bajarlo o corregirlo.</p>'
+: '<p class="ac av" style="margin:-4px 0 10px">Llegan solas dos veces al día. Nada sale sin que tú lo apruebes.</p>')
++ f.map(function(x){ return borradorHTML(x, BORRADORES.indexOf(x), yaSalio); }).join('')
++ '<div style="height:20px"></div>';
+pintarSecciones();
+}
 var BORRADORES = [];
 function cargarBorradores(){
 var caja = document.getElementById('ed-borradores');
 if (!caja || !SB.hayCuenta()) return;
 caja.innerHTML = '<p class="ac av al">Cargando...</p>';
 SB.leer('historias',
-'select=id,tipo,texto,pregunta,opciones,fuente,fuente_url,mascara_emoji,creado_en&publicado=eq.false&order=creado_en.desc&limit=50')
+'select=id,tipo,texto,pregunta,opciones,fuente,fuente_url,mascara_emoji,creado_en&publicado=eq.false&order=creado_en.desc&limit=100')
 .then(function(filas){
 BORRADORES = filas || [];
 if (!BORRADORES.length){
 caja.innerHTML = '<div class="card bh al" style="padding:18px"><p class="ac au" style="margin:0">No tienes nada en borrador.</p><p class="ac av" style="margin:6px 0 0">Las noticias llegan solas dos veces al día y caen acá.</p></div><div style="height:20px"></div>';
 return;
 }
-caja.innerHTML = '<h3 class="tb1 z1" style="margin-top:2px">Borradores <span class="bdg bag ac">' + BORRADORES.length + '</span></h3>'
-+ '<p class="ac av" style="margin:-4px 0 10px">Llegan solas dos veces al día. Nada sale sin que tú lo apruebes.</p>'
-+ BORRADORES.map(borradorHTML).join('')
-+ '<div style="height:20px"></div>';
+repintarPanel();
 }).catch(function(e){ caja.innerHTML = '<p class="ac av">No pudimos traerlos: ' + esc(e.message) + '</p>'; });
 }
 /*Se dibuja como la tarjeta de su seccion, pero sin votos ni comentarios*/
