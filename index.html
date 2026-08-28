@@ -48,6 +48,12 @@
 #modal-lugar.on{display:flex}
 #modal-lugar>div{width:100%;background:rgba(18,11,32,.99);border-radius:22px 22px 0 0;padding:18px 16px 28px;border-top:1px solid rgba(255,255,255,.12);max-height:82vh;overflow-y:auto}
 #modal-lugar .mapa-chico{height:270px}
+.avi{display:flex;align-items:center;gap:11px;width:100%;padding:12px;border-radius:14px;border:1px solid var(--line);background:rgba(255,255,255,.04);cursor:pointer;transition:all .18s;text-align:left}
+.avi:active{transform:scale(.985)}
+.avi.nuevo{border-color:rgba(127,19,236,.45);background:rgba(127,19,236,.12)}
+.avi-i{width:38px;height:38px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;background:rgba(127,19,236,.2)}
+.avi-v{background:rgba(34,197,94,.2)}
+.avi-p{width:8px;height:8px;border-radius:50%;background:#b06ef7;flex-shrink:0;box-shadow:0 0 8px rgba(176,110,247,.8)}
 .pap-fin{color:#fca5a5;border-color:rgba(239,68,68,.3)}
 .sel-cie{display:flex;align-items:center;justify-content:center;gap:5px;margin-top:10px;padding:5px 9px;border-radius:9px;font-size:11px;font-weight:700;letter-spacing:.02em;color:#3edcf0;background:rgba(6,182,212,.1);border:1px solid rgba(6,182,212,.22)}
 .sel-cie.fin{color:var(--tx3);background:rgba(255,255,255,.04);border-color:rgba(255,255,255,.1)}
@@ -798,7 +804,7 @@ Continuar con Apple
 <!-- 2. MENSAJE PARA EL FUTURO --><div id="tic-futuro" onclick="go('s-create')" class="tic" style="--c:#06b6d4"><div class="ab aa ak z2"><div class="tipo-ico z33">⏳</div><div class="am"><h2 class="ad aq a7 z0">Mensaje para el futuro</h2><p class="c1 ac y108">Se abre el día que tú elijas.</p></div><span class="c0 z13"><svg class="ic"><use href="#i-next"/></svg></span></div></div>
 </div>
 </div>
-<!-- ============ SCREEN: DESCUBRIR ============ --><div class="scn" id="s-discover"><div class="dtabs"><button class="dtab on" onclick="go('s-discover')"><span class="dt-i">🔥</span><span class="dt-t">Cerca de ti</span></button><button class="dtab" onclick="go('s-celebs')"><span class="dt-i">⭐</span><span class="dt-t">Farándula</span></button><button class="dtab" onclick="go('s-sports')"><span class="dt-i">⚽</span><span class="dt-t">Deportes</span></button><button class="dtab" onclick="go('s-votes')"><span class="dt-i">🗳️</span><span class="dt-t">Votaciones</span></button></div><p class="av ac" style="text-align:center;margin:2px 0 0;padding:0 12px">Tócalas o desliza hacia los lados para cambiar de pestaña</p><div class="ab aa a3 af z35"><h2 class="ad ae z21" style="white-space:nowrap;flex:0 0 auto">Cerca de ti</h2><button class="cta-crear" onclick="abrirExponer()"><span class="cta-mas">➕</span><span class="cta-tx"><b>Comparte</b><b>tu historia</b></span></button><div class="llc" onclick="aviso('Vota para juntar llaves y abrir desenlaces','🔑')"><span>🔑</span><b class="llaves-n">24</b></div><button class="icb zo" onclick="go('s-notifications')" style="width:36px;height:36px;min-width:36px"><svg class="ic y112"><use href="#i-bell"/></svg><span class="zm" style="top:6px;right:7px;width:7px;height:7px;border-radius:50%;background:#ef4444"></span></button></div><!-- Mapa interactivo --><div id="mini-mapa"><div id="mini-view"><div id="mapa-leaflet" style="position:absolute;inset:0"></div></div><div id="mini-ctrl"><button onclick="MiniMapa.zoom(1.4)"><svg class="ic"><use href="#i-plus"/></svg></button><div style="height:1px;background:rgba(255,255,255,.12)"></div><button onclick="MiniMapa.zoom(0.72)"><svg class="ic"><use href="#i-minus"/></svg></button></div><button id="mini-lupa" onclick="abrirBuscar()"><svg class="ic"><use href="#i-search"/></svg></button><button id="mini-yo" onclick="MiniMapa.centrar()"><svg class="ic"><use href="#i-target"/></svg></button><div id="mini-lbl-box"><span class="bdg bap" id="mini-lbl">30 historias cerca</span></div><div id="mini-pop"></div></div>
+<!-- ============ SCREEN: DESCUBRIR ============ --><div class="scn" id="s-discover"><div class="dtabs"><button class="dtab on" onclick="go('s-discover')"><span class="dt-i">🔥</span><span class="dt-t">Cerca de ti</span></button><button class="dtab" onclick="go('s-celebs')"><span class="dt-i">⭐</span><span class="dt-t">Farándula</span></button><button class="dtab" onclick="go('s-sports')"><span class="dt-i">⚽</span><span class="dt-t">Deportes</span></button><button class="dtab" onclick="go('s-votes')"><span class="dt-i">🗳️</span><span class="dt-t">Votaciones</span></button></div><p class="av ac" style="text-align:center;margin:2px 0 0;padding:0 12px">Tócalas o desliza hacia los lados para cambiar de pestaña</p><div class="ab aa a3 af z35"><h2 class="ad ae z21" style="white-space:nowrap;flex:0 0 auto">Cerca de ti</h2><button class="cta-crear" onclick="abrirExponer()"><span class="cta-mas">➕</span><span class="cta-tx"><b>Comparte</b><b>tu historia</b></span></button><div class="llc" onclick="aviso('Vota para juntar llaves y abrir desenlaces','🔑')"><span>🔑</span><b class="llaves-n">24</b></div><button class="icb zo" onclick="go('s-notifications')" style="width:36px;height:36px;min-width:36px"><svg class="ic y112"><use href="#i-bell"/></svg><span id="campana-punto" class="zm" style="display:none;top:6px;right:7px;width:7px;height:7px;border-radius:50%;background:#ef4444"></span></button></div><!-- Mapa interactivo --><div id="mini-mapa"><div id="mini-view"><div id="mapa-leaflet" style="position:absolute;inset:0"></div></div><div id="mini-ctrl"><button onclick="MiniMapa.zoom(1.4)"><svg class="ic"><use href="#i-plus"/></svg></button><div style="height:1px;background:rgba(255,255,255,.12)"></div><button onclick="MiniMapa.zoom(0.72)"><svg class="ic"><use href="#i-minus"/></svg></button></div><button id="mini-lupa" onclick="abrirBuscar()"><svg class="ic"><use href="#i-search"/></svg></button><button id="mini-yo" onclick="MiniMapa.centrar()"><svg class="ic"><use href="#i-target"/></svg></button><div id="mini-lbl-box"><span class="bdg bap" id="mini-lbl">30 historias cerca</span></div><div id="mini-pop"></div></div>
 <div id="panel-buscar"><div style="padding:13px 14px 14px"><div class="zo ze"><span class="zm y9" style="left:13px;transform:translateY(-50%);color:var(--tx3);display:flex"><svg class="ic y112"><use href="#i-search"/></svg></span><input id="inp-buscar" class="inf" type="text" autocomplete="off"
 placeholder="Busca tu comuna: Maipú, Ñuñoa, Puente Alto..." style="padding-left:38px;font-size:16px"
 oninput="buscarLugar(this.value)"/></div>
@@ -859,8 +865,7 @@ oninput="buscarLugar(this.value)"/></div>
 
 <div class="ab af" style="margin-top:14px"><button class="btg z16" onclick="go('s-discover')">Ver más historias</button></div></div></div></div>
 <!-- ============ SCREEN: NOTIFICACIONES ============ --><div class="scn" id="s-notifications"><div class="tbg z9"><button onclick="atras()" class="icb w34"><svg class="ic y101"><use href="#i-back"/></svg></button><h2 class="ad ae z27">Avisos</h2><button class="icb w34" onclick="go('s-notifications-config')"><svg class="ic y101"><use href="#i-settings"/></svg></button></div><div class="scr z40">
-<div class="zc zg" style="padding-top:26px"><div style="font-size:44px;margin-bottom:10px">🔔</div><span class="bdg bag ac">Pronto</span></div>
-<div class="card bh al" style="padding:22px;margin-top:14px"><p class="ad ae z0" style="font-size:15px">Todavía no hay avisos</p><p class="ah ac z0" style="margin-top:7px;line-height:1.55">Acá te vamos a avisar cuando se revele un desenlace que estabas esperando, cuando tu historia tenga resultado, y cuando falte poco para que llegue un mensaje que dejaste.</p></div>
+<div id="avisos-lista"></div>
 <div class="card zu y0"><div class="ab a2 ak"><svg class="ic" style="font-size:16px;color:var(--tx3);margin-top:1px"><use href="#i-shield"/></svg><p class="z0 zh" style="color:var(--tx3);font-size:11px">Nunca te contamos el desenlace en el aviso. Solo que ya está listo.</p></div></div></div></div>
 <!-- ============ SCREEN: REPORTAR ============ --><div class="scn" id="s-report"><div class="tb3"><button onclick="atras()" class="icb"><svg class="ic"><use href="#i-back"/></svg></button><h2 class="ttl">Reportar</h2><div class="w38"></div></div><div class="scr4 z3"><p class="as au" style="margin:0 0 16px">Cuéntanos qué pasa. Revisamos todos los reportes.</p><div class="ab aj af" style="margin-bottom:20px"><button class="rep" onclick="elegirRep(this)">🚫 Es falso o inventado</button><button class="rep" onclick="elegirRep(this)">😡 Acoso o amenaza</button><button class="rep" onclick="elegirRep(this)">🔞 Contenido sexual</button><button class="rep" onclick="elegirRep(this)">👤 Expone datos de alguien</button><button class="rep" onclick="elegirRep(this)">👶 Involucra a un menor</button><button class="rep" onclick="elegirRep(this)">⚖️ Otra razón</button></div><textarea class="inf ren zg" style="height:90px" placeholder="Cuéntanos más (opcional)"></textarea>
 <div class="card y1 zk zg"><div class="ab aa ak zi zb" style="align-items:flex-start;gap:10px"><span class="y106">🎭</span><div class="za"><p class="ts1 z0">Acá no hace falta bloquear</p><p class="ah ac z0">Cada publicación sale con una máscara distinta, así que nadie te sigue ni puede insistir contigo. Si algo está mal, repórtalo y lo revisamos nosotros.</p></div></div></div>
@@ -906,11 +911,12 @@ oninput="buscarLugar(this.value)"/></div>
 <p class="zc zh" style="color:var(--tx3);font-size:11px;margin:16px 0 0">
 Lee nuestros <span class="y147" onclick="verLegal('privacidad')">Términos</span>
 y <span class="y147" onclick="verLegal('privacidad')">Política de Privacidad</span></p></div></div>
-<!-- ============ SCREEN: NOTIFICACIONES ============ --><div class="scn" id="s-notifications-config"><div class="tbg z9"><button onclick="atras()" class="icb w34"><svg class="ic y101"><use href="#i-back"/></svg></button><h2 class="ad ae z27">Notificaciones</h2></div><div class="scr" style="padding-top:10px;padding-bottom:20px">
-<p class="cfh">Mis historias</p><div class="cfg-g"><div class="cff"><div class="cft"><b>Votaron tu historia</b><small>Cada vez que alguien opina</small></div><label class="tgg"><input type="checkbox" checked/><span class="tos"></span></label></div><div class="cff"><div class="cft"><b>Alguien votó tu historia</b><small></small></div><label class="tgg"><input type="checkbox" checked/><span class="tos"></span></label></div><div class="cff"><div class="cft"><b>Ganancias recibidas</b></div><label class="tgg"><input type="checkbox" checked/><span class="tos"></span></label></div></div>
-<p class="cfh">Lo que recibes</p><div class="cfg-g"><div class="cff"><div class="cft"><b>Nueva historia cerca de ti</b></div><label class="tgg"><input type="checkbox" checked/><span class="tos"></span></label></div><div class="cff"><div class="cft"><b>Un desenlace está por salir</b><small>24 horas antes</small></div><label class="tgg"><input type="checkbox" checked/><span class="tos"></span></label></div><div class="cff"><div class="cft"><b>Hay una historia en tu zona</b><small>Sin decir dónde exactamente</small></div><label class="tgg"><input type="checkbox" checked/><span class="tos"></span></label></div></div>
-<p class="cfh">Todos los días</p><div class="cfg-g"><div class="cff"><div class="cft"><b>La del día</b><small>Para no perder tu racha</small></div><label class="tgg"><input type="checkbox" checked/><span class="tos"></span></label></div><div class="cff"><div class="cft"><b>Desenlace revelado</b><small>De historias donde votaste</small></div><label class="tgg"><input type="checkbox" checked/><span class="tos"></span></label></div></div>
-<p class="cfh">Otros</p><div class="cfg-g"><div class="cff"><div class="cft"><b>Novedades de la app</b></div><label class="tgg"><input type="checkbox"/><span class="tos"></span></label></div></div></div></div>
+<!-- ============ SCREEN: NOTIFICACIONES ============ --><div class="scn" id="s-notifications-config"><div class="tb3"><button onclick="atras()" class="icb"><svg class="ic"><use href="#i-back"/></svg></button><h2 class="ttl">Avisos</h2><div class="w38"></div></div><div class="scr z40">
+<p class="ah ac z0" style="margin:0 0 14px;line-height:1.55">Elige de qué te avisamos. Todo esto pasa dentro de la app: no te llegan notificaciones al teléfono todavía.</p>
+<div class="card y1 zk zw"><div class="fib y131"><div class="ab aa ak"><span class="y104">🎯</span><div class="am"><p class="ts1 z0">Desenlaces que esperabas</p><p class="ah ac z0">De historias donde votaste. Nunca te contamos el final acá.</p></div><label class="tgg"><input type="checkbox" id="av-sw-final" checked onchange="guardarAvisoSwitch('final', this)"/><span class="tos"></span></label></div></div>
+<div class="fib y131"><div class="ab aa ak"><span class="y104">👥</span><div class="am"><p class="ts1 z0">Resultado de lo que publicaste</p><p class="ah ac z0">Cuando cierra la votación de algo tuyo.</p></div><label class="tgg"><input type="checkbox" id="av-sw-mio" checked onchange="guardarAvisoSwitch('mio', this)"/><span class="tos"></span></label></div></div>
+<div class="fib y131"><div class="ab aa ak"><span class="y104">💌</span><div class="am"><p class="ts1 z0">Mensajes al futuro</p><p class="ah ac z0">Cuando abren uno tuyo, cuando falta poco, o cuando te llega uno.</p></div><label class="tgg"><input type="checkbox" id="av-sw-msg" checked onchange="guardarAvisoSwitch('msg', this)"/><span class="tos"></span></label></div></div></div>
+</div></div>
 <!-- ============ SCREEN 20: ENVIADOS V2 (con intentos) ============ --><div class="scn" id="s-sent"><div class="top-bar ab aa a3 ak z31"><button onclick="atras()" class="icb w34"><svg class="ic y101"><use href="#i-back"/></svg></button><h2 class="ad ae y139">ENVIADOS</h2></div>
 <div class="ab af a3" style="padding-top:11px;padding-bottom:8px"><button class="tab avo" onclick="tabEnv(this,0)">🚀 En camino <b>5</b></button><button class="tab" onclick="tabEnv(this,1)">✓ Ya llegaron <b>1</b></button></div>
 <div class="a3" style="padding-bottom:4px"><div class="cfg zt" style="margin:0"><span class="y106" id="mi-alias-ico2">🦊</span><p class="c2 ac z0 za zh">Esta es tu bandeja privada. Acá eres <b class="y107" id="mi-alias-nom2">Zorro del Sur</b> y nadie más ve esto.</p></div></div>
@@ -981,7 +987,9 @@ Lees muy bien las historias de trabajo. En las de pareja te cuesta: <b style="co
 /*BARRA ÚNICA*/
 var SINBARRA = ['s-welcome','s-register','s-login','s-editorial','s-checkout','s-reveal','s-expose','s-rapido'];var TABMAP = {'s-discover':'s-discover','s-celebs':'s-discover','s-sports':'s-discover','s-votes':'s-discover','s-vote':'s-discover','s-search':'s-discover','s-received':'s-received','s-sent':'s-received','s-today':'s-today','s-profile':'s-profile','s-earnings':'s-profile','s-privacy':'s-profile','s-editorial':'s-profile','s-notifications-config':'s-profile','s-lectura':'s-profile','s-category':'crear','s-create':'crear','s-notifications':'s-discover'
 };function ajustarBarra(id){var nb = document.getElementById('navbar');if(!nb) return;var ocultar = SINBARRA.indexOf(id) > -1;nb.classList.toggle('oculto', ocultar);document.body.classList.toggle('connav', !ocultar);var act = TABMAP[id] || '';nb.querySelectorAll('.nat').forEach(function(b){b.classList.toggle('acv', b.dataset.t === act);});}/*NAVEGACIÓN*/
-var histo = ['s-welcome'];var PANT_ACT = 's-welcome';function go(screenId, atrasFlag) {var t = document.getElementById(screenId);if (!t) return;if (screenId === 's-profile'){ try { pintarMiUsuario(); pintarAliasFijo(); pintarLlaves(); revisarSiSoyEditor(); pintarMisNumeros(); } catch(e){} }if (screenId === 's-sent'){ try { cargarEnviados(); } catch(e){} }setTimeout(function(){ try { repasarVotosEnPantalla(); ponerBotonesAdmin(); } catch(e){} }, 60);if (screenId === 's-editorial'){ try { edVista(document.getElementById('ed-tab-borr'), 'borradores'); edTipo(document.querySelector('#be-tipos .plant') || null, EDTIPO); } catch(e){} }var esAtrasReal = atrasFlag === true;var animBack = esAtrasReal;if (atrasFlag === undefined) {var a = ORDEN.indexOf(PANT_ACT), b = ORDEN.indexOf(screenId);if (a > -1 && b > -1 && b < a) animBack = true;}PANT_ACT = screenId;document.querySelectorAll('.scn').forEach(function(s){ s.classList.remove('acv','back'); });if (animBack) t.classList.add('back');t.classList.add('acv');t.scrollTop = 0;t.querySelectorAll('.scr,.scr4,.a5').forEach(function(e){ e.scrollTop = 0; });window.scrollTo(0,0);ajustarBarra(screenId);if (!esAtrasReal && histo[histo.length-1] !== screenId) histo.push(screenId);if (histo.length > 30) histo.shift();if (screenId === 's-vote') {var alts = document.getElementById('h-alts');if (alts && !alts.innerHTML.trim()) { abrirHistoria(HACT || 0); return; }var ab = document.getElementById('voto-abierto');var pr = document.getElementById('voto-prediccion');var rs = document.getElementById('voto-resultado');if (ab && pr && rs) {var v = yaVote('h'+HACT);ab.style.display = v ? 'none' : '';pr.style.display = 'none';rs.style.display = v ? 'block' : 'none';}}if (screenId === 's-celebs') pintarFaran();if (screenId === 's-sports') pintarDepor();pintarLlaves();if (screenId === 's-votes') pintarVotas();if (screenId === 's-today') { pintarPeleado(); pintarTendencias(); }if (screenId === 's-received') pintarRecibidos();if (screenId === 's-comments') cargarComentarios();if (screenId === 's-create-dil') contarDil();setTimeout(function(){ tipPantalla(screenId); }, 420);if (screenId === 's-category' || screenId === 's-create-pareja' || screenId === 's-create' || screenId === 's-expose'){t.querySelectorAll('textarea').forEach(function(e){ e.value = ''; });}if (screenId === 's-discover') {pintarFeed();setTimeout(function(){MiniMapa.abrir();if (window.sincronizarMapa) window.sincronizarMapa();}, 120);}}function atras(){if (histo.length > 1) { histo.pop(); go(histo[histo.length-1], true); }else go('s-discover', true);}/*LLAVES: se ganan votando, abren desenlaces*/
+var histo = ['s-welcome'];var PANT_ACT = 's-welcome';function go(screenId, atrasFlag) {var t = document.getElementById(screenId);if (!t) return;if (screenId === 's-profile'){ try { pintarMiUsuario(); pintarAliasFijo(); pintarLlaves(); revisarSiSoyEditor(); pintarMisNumeros(); } catch(e){} }if (screenId === 's-sent'){ try { cargarEnviados(); } catch(e){} }
+if (screenId === 's-notifications'){ try { cargarAvisos().then(avisosLeidos); } catch(e){} }
+if (screenId === 's-notifications-config'){ try { pintarAvisoSwitches(); } catch(e){} }setTimeout(function(){ try { repasarVotosEnPantalla(); ponerBotonesAdmin(); } catch(e){} }, 60);if (screenId === 's-editorial'){ try { edVista(document.getElementById('ed-tab-borr'), 'borradores'); edTipo(document.querySelector('#be-tipos .plant') || null, EDTIPO); } catch(e){} }var esAtrasReal = atrasFlag === true;var animBack = esAtrasReal;if (atrasFlag === undefined) {var a = ORDEN.indexOf(PANT_ACT), b = ORDEN.indexOf(screenId);if (a > -1 && b > -1 && b < a) animBack = true;}PANT_ACT = screenId;document.querySelectorAll('.scn').forEach(function(s){ s.classList.remove('acv','back'); });if (animBack) t.classList.add('back');t.classList.add('acv');t.scrollTop = 0;t.querySelectorAll('.scr,.scr4,.a5').forEach(function(e){ e.scrollTop = 0; });window.scrollTo(0,0);ajustarBarra(screenId);if (!esAtrasReal && histo[histo.length-1] !== screenId) histo.push(screenId);if (histo.length > 30) histo.shift();if (screenId === 's-vote') {var alts = document.getElementById('h-alts');if (alts && !alts.innerHTML.trim()) { abrirHistoria(HACT || 0); return; }var ab = document.getElementById('voto-abierto');var pr = document.getElementById('voto-prediccion');var rs = document.getElementById('voto-resultado');if (ab && pr && rs) {var v = yaVote('h'+HACT);ab.style.display = v ? 'none' : '';pr.style.display = 'none';rs.style.display = v ? 'block' : 'none';}}if (screenId === 's-celebs') pintarFaran();if (screenId === 's-sports') pintarDepor();pintarLlaves();if (screenId === 's-votes') pintarVotas();if (screenId === 's-today') { pintarPeleado(); pintarTendencias(); }if (screenId === 's-received') pintarRecibidos();if (screenId === 's-comments') cargarComentarios();if (screenId === 's-create-dil') contarDil();setTimeout(function(){ tipPantalla(screenId); }, 420);if (screenId === 's-category' || screenId === 's-create-pareja' || screenId === 's-create' || screenId === 's-expose'){t.querySelectorAll('textarea').forEach(function(e){ e.value = ''; });}if (screenId === 's-discover') {pintarFeed();setTimeout(function(){MiniMapa.abrir();if (window.sincronizarMapa) window.sincronizarMapa();}, 120);}}function atras(){if (histo.length > 1) { histo.pop(); go(histo[histo.length-1], true); }else go('s-discover', true);}/*LLAVES: se ganan votando, abren desenlaces*/
 /*SUPABASE — cliente propio, sin librerías externas ni CDN*/
 var SB = (function(){
 var URL_SB = 'https://vbsuhywibnbmvintltkt.supabase.co';
@@ -1102,6 +1110,9 @@ MIALIAS = {m: p.alias_emoji, a: p.alias_nombre};
 LLAVES = p.llaves;
 MEMBRESIA = p.membresia === 'legendario' ? 'leg' : 'free';
 MIUSUARIO = p.username.charAt(0) === '@' ? p.username : '@' + p.username;
+AVISOS_VISTOS = p.avisos_vistos_en || null;
+AVISOS_APAGADOS = p.avisos_apagados || [];
+pintarAvisoSwitches();
 pintarAliasFijo(); pintarLlaves(); pintarMiUsuario();
 return p;
 });
@@ -1965,7 +1976,12 @@ cargarPinesMapa();
 CONTENIDO_LISTO = true;
 try { revisarSiSoyEditor(); } catch(e){}
 repintarTodo();
-return cargarMisVotos().then(function(){ repintarTodo(); setTimeout(repasarVotosEnPantalla, 60); return true; });
+return cargarMisVotos().then(function(){
+repintarTodo(); setTimeout(repasarVotosEnPantalla, 60);
+/*Solo para prender el punto de la campana; la pantalla se pinta al entrar*/
+setTimeout(function(){ try { cargarAvisos(); } catch(e){} }, 800);
+return true;
+});
 })
 .catch(function(e){ console.log('contenido:', e.message); return false; });
 }
@@ -2033,6 +2049,154 @@ s.className = 'sel-cie' + (fin ? ' fin' : '');
 s.textContent = (fin ? '⏳ ' : '⏱ ') + textoCierre(id);
 c.classList.toggle('cerrada', fin);
 }
+}
+/*AVISOS
+No hay tabla de avisos ni nada que se dispare solo: se arman en el momento con
+lo que ya esta en la base. Tus historias, los votos que diste y los mensajes
+que mandaste o te mandaron. Asi ningun aviso puede hablar de algo que no paso,
+que era justo el problema de la pantalla anterior: estaba escrita a mano y le
+decia a cualquiera que habia ganado $4.851.
+
+Lo que NO hace todavia: llegar al telefono con la app cerrada. Eso necesita la
+app empaquetada, que va al final de todo.*/
+var AVISOS = [], AVISOS_VISTOS = null, AVISOS_APAGADOS = [];
+/*Se guarda lo APAGADO y no lo prendido: asi un aviso nuevo llega prendido sin
+tener que tocarle el perfil a nadie.*/
+function avisoPrendido(k){ return AVISOS_APAGADOS.indexOf(k) < 0; }
+function pintarAvisoSwitches(){
+[['final','av-sw-final'],['mio','av-sw-mio'],['msg','av-sw-msg']].forEach(function(par){
+var e = document.getElementById(par[1]);
+if (e) e.checked = avisoPrendido(par[0]);
+});
+}
+function guardarAvisoSwitch(k, el){
+var i = AVISOS_APAGADOS.indexOf(k);
+if (el.checked && i > -1) AVISOS_APAGADOS.splice(i, 1);
+if (!el.checked && i < 0) AVISOS_APAGADOS.push(k);
+if (SB.hayCuenta()) SB.actualizar('perfiles', 'id=eq.' + SB.uid(),
+{avisos_apagados: AVISOS_APAGADOS}).catch(function(e){ aviso(e.message, '⚠️'); });
+cargarAvisos();
+}
+
+function _aviso(o){
+if (!o.cuando) return; /*Sin fecha real no se muestra: no se inventan horas*/
+AVISOS.push(o);
+}
+function cargarAvisos(){
+var caja = document.getElementById('avisos-lista');
+if (!caja) return Promise.resolve(false);
+if (!SB.hayCuenta()){
+caja.innerHTML = vacioAvisos();
+return Promise.resolve(false);
+}
+caja.innerHTML = '<p class="ac av al" style="padding:26px 0">Cargando...</p>';
+AVISOS = [];
+var yo = SB.uid();
+return Promise.all([
+/*Lo mío: si ya cerró la votación, y si tiene votos*/
+SB.leer('historias', 'select=id,texto,tipo,cierra_en,revelado&autor_id=eq.' + yo
++ '&eliminado_en=is.null&publicado=eq.true&order=creado_en.desc&limit=60'),
+/*Donde voté yo: para saber a qué desenlaces les estoy esperando el final*/
+SB.leer('votos', 'select=historia_id&votante_id=eq.' + SB.uid() + '&limit=400'),
+/*Los que mandé y los que me mandaron*/
+SB.leer('mensajes_futuro', 'select=id,texto,codigo_enlace,fecha_apertura,abierto,abierto_en,tipo_condicion,lugar_nombre,remitente_id,destinatario_id&or=(remitente_id.eq.' + yo + ',destinatario_id.eq.' + yo + ')&limit=100')
+]).then(function(r){
+var mias = r[0] || [], votos = r[1] || [], msgs = r[2] || [];
+mias.forEach(function(x){
+if (avisoPrendido('mio') && x.cierra_en && new Date(x.cierra_en) <= Date.now()){
+_aviso({cuando: x.cierra_en, ico: '👥', col: 'z10',
+tit: 'Cerró la votación de tu publicación',
+sub: recorte(x.texto) + ' · ya tiene resultado',
+ir: "irAMiHistoria('" + x.id + "')"});
+}
+});
+var ids = (avisoPrendido('final') ? votos : []).map(function(v){ return v.historia_id; }).filter(function(id){
+return !mias.some(function(m){ return m.id === id; }); /*Tu propia historia no te avisa que "esperabas" su final*/
+});
+var luego = ids.length
+? SB.leer('historias', 'select=id,texto,revelado_en&revelado=eq.true&eliminado_en=is.null&id=in.(' + ids.join(',') + ')&limit=60')
+: Promise.resolve([]);
+return luego.then(function(rev){
+(rev || []).forEach(function(x){
+_aviso({cuando: x.revelado_en, ico: '🎯', col: 'verde',
+tit: 'Se reveló un desenlace que esperabas',
+sub: recorte(x.texto) + ' · ábrelo tú, acá no te contamos nada',
+ir: "irAMiHistoria('" + x.id + "')"});
+});
+(avisoPrendido('msg') ? msgs : []).forEach(function(m){
+var mio = m.remitente_id === yo;
+if (mio && m.abierto && m.abierto_en){
+_aviso({cuando: m.abierto_en, ico: '📖', col: 'verde',
+tit: 'Abrieron el mensaje que dejaste',
+sub: recorte(m.texto), ir: "go('s-sent')"});
+} else if (mio && !m.abierto && m.fecha_apertura){
+var faltan = new Date(m.fecha_apertura) - Date.now();
+/*Se avisa solo cuando ya falta poco: un mensaje a 18 años no es un aviso*/
+if (faltan > 0 && faltan < 7 * 86400000){
+_aviso({cuando: m.fecha_apertura, ico: '🚀', col: 'z33',
+tit: 'Falta poco para que llegue un mensaje tuyo',
+sub: recorte(m.texto), ir: "go('s-sent')"});
+}
+} else if (!mio && !m.abierto && m.fecha_apertura && new Date(m.fecha_apertura) <= Date.now()){
+_aviso({cuando: m.fecha_apertura, ico: '💌', col: 'z33',
+tit: 'Te dejaron un mensaje y ya se puede abrir',
+sub: 'Está esperándote en Recibidos', ir: "go('s-received')"});
+}
+});
+AVISOS.sort(function(a, b){ return new Date(b.cuando) - new Date(a.cuando); });
+pintarAvisos();
+return true;
+});
+}).catch(function(e){
+caja.innerHTML = '<p class="ac av al" style="padding:26px 0">' + esc(e.message) + '</p>';
+return false;
+});
+}
+function recorte(t){
+t = (t || '').split('\n')[0];
+return esc(t.length > 52 ? t.slice(0, 52) + '…' : t);
+}
+function vacioAvisos(){
+return '<div class="zc zg" style="padding-top:26px"><div style="font-size:44px;margin-bottom:10px">🔔</div></div>'
++ '<div class="card bh al" style="padding:22px;margin-top:6px"><p class="ad ae z0" style="font-size:15px">Todavía no hay avisos</p>'
++ '<p class="ah ac z0" style="margin-top:7px;line-height:1.55">Acá te vamos a avisar cuando se revele un desenlace que estabas esperando, cuando tu publicación tenga resultado, y cuando falte poco para que llegue un mensaje que dejaste.</p></div>';
+}
+function pintarAvisos(){
+var caja = document.getElementById('avisos-lista');
+if (!caja) return;
+if (!AVISOS.length){ caja.innerHTML = vacioAvisos(); marcarCampana(0); return; }
+var corte = AVISOS_VISTOS ? new Date(AVISOS_VISTOS).getTime() : 0;
+var nuevos = 0;
+caja.innerHTML = '<p class="cfh y115">Lo que pasó con lo tuyo</p><div class="ab aj af z36">'
++ AVISOS.map(function(a){
+var es = new Date(a.cuando).getTime() > corte;
+if (es) nuevos++;
+return '<div class="avi' + (es ? ' nuevo' : '') + '" onclick="' + a.ir + '">'
++ '<div class="avi-i ' + (a.col === 'verde' ? 'avi-v' : a.col) + '">' + a.ico + '</div>'
++ '<div class="f1m"><p class="ad ae z41">' + a.tit + '</p>'
++ '<p class="z15">' + a.sub + ' · ' + haceCuanto(a.cuando) + '</p></div>'
++ (es ? '<div class="avi-p"></div>' : '') + '</div>';
+}).join('') + '</div>';
+marcarCampana(nuevos);
+}
+/*Al entrar a la pantalla se dan por leídos. Queda en el perfil y no en el
+teléfono: si estuviera en el teléfono, entrar desde otro aparato mostraría
+todo como nuevo de nuevo.*/
+function avisosLeidos(){
+var ahora = new Date().toISOString();
+AVISOS_VISTOS = ahora;
+if (SB.hayCuenta()) SB.actualizar('perfiles', 'id=eq.' + SB.uid(), {avisos_vistos_en: ahora}).catch(function(){});
+setTimeout(function(){ marcarCampana(0); }, 400);
+}
+function marcarCampana(n){
+var p = document.getElementById('campana-punto');
+if (p) p.style.display = n > 0 ? '' : 'none';
+}
+function irAMiHistoria(id){
+var i = HISTORIAS.map(function(x){ return x.id; }).indexOf(id);
+if (i > -1){ abrirHistoria(i); return; }
+go('s-discover');
+aviso('Esa publicación ya no está en el feed','📭');
 }
 /*VOTAR CONTRA LA BASE
 El voto se guarda y la llave se suma en el servidor. Si el voto no se puede
@@ -3112,14 +3276,26 @@ return '<div class="coment' + (x.autor_id === SB.uid() ? ' mio' : '') + '">'
 c.innerHTML = '<p class="ac av al">No pudimos traerlos: ' + esc(e.message) + '</p>';
 });
 }
+/*Hace cuanto fue, o cuanto falta: los avisos tambien hablan de cosas que
+todavia no pasan, como un mensaje que esta por llegar.*/
 function haceCuanto(iso){
-var m = Math.round((Date.now() - new Date(iso)) / 60000);
+var t = new Date(iso).getTime();
+if (isNaN(t)) return '';
+var d = Date.now() - t;
+if (d < 0){
+var dias = Math.round(-d / 86400000);
+if (dias >= 1) return 'en ' + dias + (dias === 1 ? ' día' : ' días');
+var horas = Math.round(-d / 3600000);
+return horas >= 1 ? 'en ' + horas + (horas === 1 ? ' hora' : ' horas') : 'muy pronto';
+}
+var m = Math.round(d / 60000);
 if (m < 1) return 'recién';
 if (m < 60) return 'hace ' + m + ' min';
 var hrs = Math.round(m / 60);
-if (hrs < 24) return 'hace ' + hrs + ' h';
-var d = Math.round(hrs / 24);
-return 'hace ' + d + (d === 1 ? ' día' : ' días');
+if (hrs < 24) return 'hace ' + hrs + (hrs === 1 ? ' hora' : ' horas');
+var dd = Math.round(hrs / 24);
+if (dd < 31) return 'hace ' + dd + (dd === 1 ? ' día' : ' días');
+return new Date(iso).toLocaleDateString('es-CL', {day:'numeric', month:'long'});
 }
 /*CUENTA: crear, entrar, salir*/
 function ocupado(id, texto){
