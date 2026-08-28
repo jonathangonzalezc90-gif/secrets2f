@@ -1719,6 +1719,9 @@ mapa.on('click', cerrarPop);
 /*El mapa manda: al terminar de moverlo se destaca en la lista la historia
 mas cercana al centro.*/
 mapa.on('moveend', function(){
+/*Si el movimiento lo pidio la lista, el mapa se calla: si no, se avisaba a si
+mismo y le quitaba el mando a la lista.*/
+if (typeof SINCRO !== 'undefined' && SINCRO.propio){ SINCRO.propio = false; return; }
 if (typeof _mandaAhora !== 'function' || !_mandaAhora('mapa')) return;
 var c = mapa.getCenter(), mejor = null, dm = 1e9;
 D = MapaSecretos.datos();
@@ -2258,7 +2261,7 @@ Van juntos en los dos sentidos:
  - Mueves el mapa y en la lista se destaca la historia que quedó al centro.
 No se persiguen entre sí: cuando uno manda, el otro deja de avisar por un
 momento. Si no, cada movimiento provocaba el del otro y quedaban rebotando.*/
-var SINCRO = {mandando: null, hasta: 0, idAct: null};
+var SINCRO = {mandando: null, hasta: 0, idAct: null, propio: false};
 function _mandaAhora(quien){
 if (SINCRO.mandando && SINCRO.mandando !== quien && Date.now() < SINCRO.hasta) return false;
 SINCRO.mandando = quien;
@@ -2269,10 +2272,13 @@ return true;
 function destacarEnMapa(id){
 if (!id || id === SINCRO.idAct) return;
 if (!_mandaAhora('lista')) return;
-SINCRO.idAct = id;
 var h = null;
 for (var i = 0; i < HISTORIAS.length; i++){ if (HISTORIAS[i].id === id){ h = HISTORIAS[i]; break; } }
+/*Si la historia no tiene comuna no hay a donde ir, y tampoco se marca como
+la actual: si no, quedaba "usada" y al volver a pasar por ella no reaccionaba.*/
 if (!h || !h.comuna) return;
+SINCRO.idAct = id;
+SINCRO.propio = true;
 try { MiniMapa.mirarComuna(h.comuna, id); } catch(e){}
 }
 /*Mira qué fila de la lista está al centro de la pantalla*/
@@ -2280,10 +2286,14 @@ function filaAlCentro(){
 var c = document.getElementById('feed-local');
 if (!c) return null;
 var filas = c.querySelectorAll('.fila[data-id]');
-var medio = window.innerHeight * 0.42, mejor = null, dm = 1e9;
+/*El centro se mide dentro de la lista, no de la pantalla: la lista empieza
+bajo el mapa, y usar la pantalla entera apuntaba a un punto que casi nunca
+caia sobre una fila.*/
+var caja = c.getBoundingClientRect();
+var medio = caja.top + caja.height * 0.35, mejor = null, dm = 1e9;
 for (var i = 0; i < filas.length; i++){
 var r = filas[i].getBoundingClientRect();
-if (r.bottom < 60 || r.top > window.innerHeight) continue;
+if (r.bottom < caja.top || r.top > caja.bottom) continue;
 var d = Math.abs((r.top + r.bottom) / 2 - medio);
 if (d < dm){ dm = d; mejor = filas[i]; }
 }
@@ -2310,9 +2320,9 @@ var f = c.querySelector('.fila[data-id="' + id + '"]');
 if (f && f.scrollIntoView) f.scrollIntoView({block:'center', behavior:'smooth'});
 }
 function engancharSincro(){
-var s = document.querySelector('#s-discover .scn-scroll') || document.querySelector('#s-discover .scr');
 var c = document.getElementById('lista-local');
-[s, c, window].forEach(function(e){
+var f = document.getElementById('feed-local');
+[c, f, window].forEach(function(e){
 if (e && e.addEventListener) e.addEventListener('scroll', alRodarLista, {passive:true});
 });
 }
