@@ -2137,6 +2137,7 @@ return;
 }
 var nom = {farandula:'⭐ Farándula', deportes:'⚽ Deportes', encuesta:'📊 Encuesta'};
 caja.innerHTML = '<h3 class="tb1 z1" style="margin-top:2px">Borradores <span class="bdg bag ac">' + filas.length + '</span></h3>'
++ '<p class="ac av" style="margin:-4px 0 10px">Las noticias llegan solas dos veces al día y caen acá. Nada se publica sin que tú lo apruebes.</p>'
 + filas.map(function(x){
 return '<div class="card bh" style="margin-bottom:10px;padding:13px">'
 + '<div class="ab aa ak" style="margin-bottom:7px"><span class="bdg bap ac">' + (nom[x.tipo] || x.tipo) + '</span>'
